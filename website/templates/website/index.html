@@ -2,8 +2,80 @@
 {% load staticfiles %}
 
 {% block content %}
-    <div class="page-header">
-            <div class="page-header-image" data-parallax="true" style="background-image: url({% static 'website/img/bg_main.jpg' %});">
+   <div class="page-header page-header-small">
+       <div class="page-header-image" data-parallax="true" style="background-image: url({% static 'website/img/background.jpg' %})">
+       </div>
+        <div class="container">
+            <div class="content-center">
+                <h1 class="title">Event Planner</h1>
+                <div class="text-center">
+                    <button class="btn btn-primary btn-round">Get Started</button>
+                    <button class="btn btn-primary btn-round">Learn More...</button>
+                </div>
             </div>
-    </div>
+        </div>
+   </div>
+        <div class="section section-about-us">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 ml-auto mr-auto text-center">
+                        <h2 class="title">Have it done!</h2>
+                        <h5 class="description">Have you ever had to plan wedding, your daugther birthday party, business meeting or your best friend's stag night? If so, you probably know how long does it take... Save your precious time and have it done with Event Planner! We are worldwide platform where clients can choose from hundreds of offers from different kinds of services located in their area, book dates and directly contact with contractors. Keep everything in one organized place and just enjoy the event!</h5>
+                    </div>
+                </div>
+                <div class="section-story-overview">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="image-container image-center"style="background-image:
+                            url({% static 'website/img/victoria-rodriguez-434501-unsplash.jpg' %})">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="image-container image-center" style="background-image:
+                            url({% static 'website/img/jens-johnsson-121807-unsplash.jpg' %})">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="image-container image-center"style="background-image: url({% static 'website/img/mitchell-orr-179532-unsplash.jpg' %})">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-description">
+                    <div class="row">
+                        <div class="col-md-8 ml-auto mr-auto text-center">
+                            <h2 class="title">How does it work?</h2>
+                                <h5 class="description">Lorem ipsum dolor sit amet, pro suas hinc errem et. Eum ne ferri euismod, augue timeam ex pri. Vis duis consul luptatum et, ei usu quaeque minimum... Odio postea ad his, ne vim cetero saperet gloriatur, ea debitis contentiones eos.
+                                </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="separator separator-primary"></div>
+        <div class="section section-team text-center">
+            <div class="container">
+                <h2 class="title">Join us</h2>
+                <div class="team">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="team-player">
+                                <img src="#" alt="Thumbnail Image" class="rounded-circle img-fluid img-raised">
+                                <h4 class="title">Client</h4>
+                                <p class="description">Lorem ipsum dolor sit amet, pro suas hinc errem et. Eum ne ferri euismod, augue timeam ex pri. Vis duis consul luptatum et, ei usu quaeque minimum... Odio postea ad his, ne vim cetero saperet gloriatur, ea debitis contentiones eos.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="team-player">
+                                <img src="#" alt="Thumbnail Image" class="rounded-circle img-fluid img-raised">
+                                <h4 class="title">Contractor</h4>
+                                <p class="description">Lorem ipsum dolor sit amet, pro suas hinc errem et. Eum ne ferri euismod, augue timeam ex pri. Vis duis consul luptatum et, ei usu quaeque minimum... Odio postea ad his, ne vim cetero saperet gloriatur, ea debitis contentiones eos.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 {% endblock content %}

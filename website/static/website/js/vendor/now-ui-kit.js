@@ -71,7 +71,7 @@ $(document).ready(function() {
     if ($(window).width() >= 992) {
         big_image = $('.page-header-image[data-parallax="true"]');
 
-        $(window).on('scroll', nowuiKitDemo.checkScrollForParallax);
+        // $(window).on('scroll', nowuiKitDemo.checkScrollForParallax);
     }
 
     // Activate Carousel

@@ -1,9 +1,14 @@
 :root {
     --major-color:#bc006a;
+    --description-color: #34373d;
 }
 
 .page-header::before {
     background-color: rgba(0, 0, 0, 0.3);
+}
+
+.description {
+    color: var(--description-color);
 }
 
 h1{
@@ -11,6 +16,10 @@ h1{
     font-family: 'Euphoria Script', cursive;
     line-height: 1.15;
     margin-bottom: 30px;
+}
+
+.separator.separator-primary {
+    background-color: var(--major-color);
 }
 
 .typography-line {
