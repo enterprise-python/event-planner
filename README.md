@@ -1,5 +1,7 @@
 # Event Planner
 
+[![Build Status](https://travis-ci.org/enterprise-python/event-planner.svg?branch=develop)](https://travis-ci.org/enterprise-python/event-planner)
+
 # Requirements
 
 * python3
