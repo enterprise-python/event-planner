@@ -1,5 +1,9 @@
 {% extends "website/base.html" %}
+{% load staticfiles %}
 
 {% block content %}
-index.html
-{% endblock %}
+    <div class="page-header">
+            <div class="page-header-image" data-parallax="true" style="background-image: url({% static 'website/img/bg_main.jpg' %});">
+            </div>
+    </div>
+{% endblock content %}
