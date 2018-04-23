@@ -29,20 +29,13 @@ class ClientFormView(View):
         client_form = self.client_form(request.POST)
 
         if user_form.is_valid() and client_form.is_valid():
-            user = user_form.save(commit=False)
+            user = user_form.save()
             client = client_form.save(commit=False)
-            user_data = user_form.clean()
 
-            username = user_data['username']
-            password = user_data['password']
-            user.set_password(password)
-            user.save()
+            client.user = user
             client.save()
 
-            user = authenticate(username=username, password=password)
-            if user is not None and user.is_active:
-                login(request, user)
-                return HttpResponseRedirect(reverse('website:index'))
+            return HttpResponseRedirect(reverse('website:login'))
 
         return render(request, self.template_name, {
             'user_form': user_form,
@@ -69,20 +62,13 @@ class ContractorFormView(View):
         contractor_form = self.contractor_form(request.POST)
 
         if user_form.is_valid() and contractor_form.is_valid():
-            user = user_form.save(commit=False)
+            user = user_form.save()
             contractor = contractor_form.save(commit=False)
-            user_data = user_form.clean()
 
-            username = user_data['username']
-            password = user_data['password']
-            user.set_password(password)
-            user.save()
+            contractor.user = user
             contractor.save()
 
-            user = authenticate(username=username, password=password)
-            if user is not None and user.is_active:
-                login(request, user)
-                return HttpResponseRedirect(reverse('website:index'))
+            return HttpResponseRedirect(reverse('website:login'))
 
         return render(request, self.template_name, {
             'user_form': user_form,
