@@ -62,13 +62,6 @@ class BusinessModelTests(TestCase):
     def create_business_type(self):
         return BusinessType.objects.create(business_type='some_business')
 
-    def create_business(self):
-        return Business.objects.create(
-            name='XYZ Inc.',
-            business_type=self.create_business_type(),
-            owner=self.create_contractor()
-            )
-
     def create_opinion(self, rating, business):
         return Opinion.objects.create(
             rating=rating,
