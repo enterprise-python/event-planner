@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib import auth
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
 from django.utils import timezone
@@ -42,3 +43,30 @@ class EventModelTests(TestCase):
             owner=self.create_client()
         )
         self.assertEqual(event.get_duration(), expected_duration)
+
+
+class LoginTests(TestCase):
+    def setUp(self):
+        self.user = User(username='john_smith',
+                         password='example_password')
+        ClientModel(user=self.user)
+
+    # def test_login_successful(self):
+    #     client = Client()
+    #     response = client.post('/login/', {
+    #         'username': self.user.username,
+    #         'password': self.user.password,
+    #     })
+    #
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertTrue(response.wsgi_request.user.is_authenticated())
+
+    def test_login_bad_password(self):
+        client = Client()
+        response = client.post('/login/', {
+            'username': self.user.username,
+            'password': 'bad_password',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['request'].user.is_authenticated)
