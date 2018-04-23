@@ -1,44 +1,30 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
 
 from .models import Client, Contractor
 
 
-class UserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
-    confirmed_password = forms.CharField(widget=forms.PasswordInput)
-
+class UserForm(UserCreationForm):
     class Meta:
         model = User
-        fields = [
+        fields = (
             'username',
             'first_name',
             'last_name',
             'email',
-            'password',
-            'confirmed_password']
-
-    def clean(self):
-        data = super().clean()
-        password = data['password']
-        confirmed_password = data['confirmed_password']
-
-        if password != confirmed_password:
-            raise ValidationError('Passwords must match')
-
-        return data
+            'password1',
+            'password2'
+        )
 
 
 class ClientForm(forms.ModelForm):
-
     class Meta:
         model = Client
-        fields = []
+        fields = ()
 
 
 class ContractorForm(forms.ModelForm):
-
     class Meta:
         model = Contractor
-        fields = []
+        fields = ()
