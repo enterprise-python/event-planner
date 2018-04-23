@@ -1,9 +1,12 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import View
 
+from eventplanner import settings
 from .forms import ClientForm, UserForm, ContractorForm
 
 
@@ -85,3 +88,27 @@ class ContractorFormView(View):
             'user_form': user_form,
             'contractor_form': contractor_form
         })
+
+
+class LoginFormView(View):
+    template_name = 'website/login.html'
+    login_form = AuthenticationForm
+
+    def get(self, request):
+        login_form = self.login_form(None)
+        return render(request, self.template_name, {'login_form': login_form})
+
+    def post(self, request):
+        login_form = self.login_form(request, data=request.POST)
+        if login_form.is_valid():
+            if login_form.user_cache:
+                login(request, login_form.user_cache)
+                return HttpResponseRedirect(reverse(settings.LOGIN_REDIRECT_URL))
+
+        return render(request, self.template_name, {'login_form': login_form})
+
+
+@login_required
+def user_logout(request):
+    logout(request)
+    HttpResponseRedirect(reverse('website:index'))
