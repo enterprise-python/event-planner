@@ -17,7 +17,7 @@ class Contractor(models.Model):
 
 
 class BusinessType(models.Model):
-    business_type = models.CharField(max_length=50, name='type', unique=True)
+    business_type = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.business_type
@@ -25,8 +25,7 @@ class BusinessType(models.Model):
 
 class Business(models.Model):
     name = models.CharField(max_length=100)
-    business_type = models.ForeignKey(BusinessType, on_delete=models.CASCADE,
-                                      name='type')
+    business_type = models.ForeignKey(BusinessType, on_delete=models.CASCADE)
     owner = models.ForeignKey(Contractor, on_delete=models.CASCADE)
 
     class Meta:
@@ -35,6 +34,18 @@ class Business(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_average_rating(self):
+        opinions = self.opinion_set.all()
+        if opinions:
+            return sum(opinion.rating for opinion in opinions) / len(opinions)
+
+    def get_event_schedule(self):
+        event_schedule = []
+        for event_id, event in enumerate(self.event_set.all()):
+            event_schedule.append((event_id, event.date_from, event.date_to))
+
+        return event_schedule
 
 
 class Event(models.Model):
@@ -49,3 +60,17 @@ class Event(models.Model):
 
     def get_duration(self):
         return self.date_to - self.date_from
+
+
+class Opinion(models.Model):
+    RATINGS = (
+        ('1', 'Very bad'),
+        ('2', 'Bad'),
+        ('3', 'Average'),
+        ('4', 'Good'),
+        ('5', 'Excellent'),
+    )
+
+    rating = models.PositiveSmallIntegerField(choices=RATINGS)
+    text = models.CharField(max_length=500)
+    business = models.ForeignKey(Business, on_delete=models.CASCADE)
