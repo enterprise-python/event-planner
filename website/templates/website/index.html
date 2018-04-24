@@ -9,13 +9,14 @@
             <div class="content-center">
                 <h1 class="title">Event Planner</h1>
                 <div class="text-center">
-                    <button class="btn btn-primary btn-round">Get Started</button>
-                    <button class="btn btn-primary btn-round">Learn More...</button>
+                    <a class="btn btn-primary btn-round" href="#get_started">Get Started</a>
+                    <a class="btn btn-primary btn-round" href="#learn_more">Learn More...</a>
                 </div>
             </div>
         </div>
    </div>
         <div class="section section-about-us">
+        <a name="learn_more"></a>
             <div class="container">
                 <div class="row">
                     <div class="col-md-8 ml-auto mr-auto text-center">
@@ -53,6 +54,7 @@
             </div>
         </div>
         <div class="separator separator-primary"></div>
+        <a name="get_started"></a>
         <div class="section section-team text-center">
             <div class="container">
                 <h2 class="title">Join us</h2>
@@ -60,18 +62,20 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="team-player">
-                                <img src="#" alt="Thumbnail Image" class="rounded-circle img-fluid img-raised">
+                                <img src="{% static 'website/img/if_office-calendar_8789.png' %}" alt="Thumbnail Image" class="rounded-circle img-fluid img-raised">
                                 <h4 class="title">Client</h4>
                                 <p class="description">Lorem ipsum dolor sit amet, pro suas hinc errem et. Eum ne ferri euismod, augue timeam ex pri. Vis duis consul luptatum et, ei usu quaeque minimum... Odio postea ad his, ne vim cetero saperet gloriatur, ea debitis contentiones eos.
                                 </p>
+                                <a class="btn btn-primary btn-round" href="{% url 'website:register_client' %}">Register</a>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="team-player">
-                                <img src="#" alt="Thumbnail Image" class="rounded-circle img-fluid img-raised">
+                                <img src="{% static 'website/img/briefcase.png' %}" alt="Thumbnail Image" class="rounded-circle img-fluid img-raised">
                                 <h4 class="title">Contractor</h4>
                                 <p class="description">Lorem ipsum dolor sit amet, pro suas hinc errem et. Eum ne ferri euismod, augue timeam ex pri. Vis duis consul luptatum et, ei usu quaeque minimum... Odio postea ad his, ne vim cetero saperet gloriatur, ea debitis contentiones eos.
                                 </p>
+                                <a class="btn btn-primary btn-round" href="{% url 'website:register_contractor' %}">Register</a>
                             </div>
                         </div>
                     </div>
