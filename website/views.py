@@ -97,4 +97,4 @@ class LoginFormView(View):
 @login_required
 def user_logout(request):
     logout(request)
-    HttpResponseRedirect(reverse('website:index'))
+    return HttpResponseRedirect(reverse('website:index'))
