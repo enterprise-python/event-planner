@@ -24,6 +24,13 @@
                                            placeholder="{{ form_field.label }}...">
                                 </div>
                             {% endfor %}
+                            {% for form_field in contractor_form %}
+                                <div class="form-group form-group-no-border input-lg">
+                                    <input type="{{ form_field.field.widget.input_type }}" name="{{ form_field.name }}"
+                                           class="form-control"
+                                           placeholder="{{ form_field.label }}...">
+                                </div>
+                            {% endfor %}
                         </div>
                         <div class="footer text-center">
                             <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Register!</button>
