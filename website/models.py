@@ -1,5 +1,19 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+from enum import Enum, auto
+
+
+class Role(Enum):
+    CLIENT = auto()
+    CONTRACTOR = auto()
+
+
+class User(AbstractUser):
+    email = models.EmailField('email address', blank=False)
+    role = models.PositiveSmallIntegerField(blank=False)
+
+    def get_role(self):
+        return Role(self.role).name
 
 
 class Client(models.Model):

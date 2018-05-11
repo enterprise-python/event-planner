@@ -1,11 +1,26 @@
 import datetime
 
 from django.contrib import auth
-from django.contrib.auth.models import User
+from .models import User
 from django.test import Client, TestCase
 from django.utils import timezone
 
-from .models import Client as ClientModel, Event, Contractor, BusinessType, Business, Opinion
+from .models import Client as ClientModel, Event, Contractor, BusinessType, Business, Opinion, Role
+
+
+class ClientModelTests(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create(username='john_smith',
+                                        first_name='John',
+                                        last_name='Smith,',
+                                        email='john_smith@example.com',
+                                        password='example_password',
+                                        role=Role.CLIENT.value,
+                                        )
+
+    def test_get_role(self):
+        self.assertEqual(self.user.get_role(), Role.CLIENT.name)
 
 
 class ClientViewTests(TestCase):
