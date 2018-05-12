@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
-from .models import Client, Contractor
+from .models import User, Client, Contractor
 
 
 class UserForm(UserCreationForm):
