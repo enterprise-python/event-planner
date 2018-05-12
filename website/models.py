@@ -9,7 +9,7 @@ class Role(Enum):
 
 
 class User(AbstractUser):
-    email = models.EmailField('email address', blank=False)
+    email = models.EmailField('email address', blank=False, unique=True)
     role = models.PositiveSmallIntegerField(blank=False)
 
     def get_role(self):

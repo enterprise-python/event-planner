@@ -18,6 +18,29 @@ class ClientRegistrationTests(TestCase):
         self.assertRedirects(response, '/login/')
         self.assertEqual(1, Client.objects.all().count())
 
+    def test_using_same_email_twice(self):
+        self.assertEqual(0, Client.objects.all().count())
+        RequestClient().post('/register-client/', {
+            'username': 'john_smith',
+            'first_name': 'John',
+            'last_name': 'Smith,',
+            'email': 'john_smith@example.com',
+            'password1': 'example_password',
+            'password2': 'example_password',
+        })
+
+        response = RequestClient().post('/register-client/', {
+            'username': 'john_smith2',
+            'first_name': 'John',
+            'last_name': 'Smith,',
+            'email': 'john_smith@example.com',
+            'password1': 'example_password',
+            'password2': 'example_password',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(1, Client.objects.all().count())
+
     def test_if_email_required(self):
         self.assertEqual(0, User.objects.all().count())
         self.assertEqual(0, Client.objects.all().count())
