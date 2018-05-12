@@ -11,7 +11,7 @@ from website.models import Role
 from .forms import ClientForm, UserForm, ContractorForm
 
 
-class ClientFormView(View):
+class ClientRegistrationView(View):
     user_form = UserForm
     client_form = ClientForm
     template_name = 'website/register_client.html'
@@ -46,7 +46,7 @@ class ClientFormView(View):
         })
 
 
-class ContractorFormView(View):
+class ContractorRegistrationView(View):
     user_form = UserForm
     contractor_form = ContractorForm
     template_name = 'website/register_contractor.html'
@@ -81,7 +81,7 @@ class ContractorFormView(View):
         })
 
 
-class LoginFormView(View):
+class LoginView(View):
     template_name = 'website/login.html'
     login_form = AuthenticationForm
 
@@ -91,11 +91,9 @@ class LoginFormView(View):
 
     def post(self, request):
         login_form = self.login_form(request, data=request.POST)
-        if login_form.is_valid():
-            if login_form.user_cache:
-                login(request, login_form.user_cache)
-                return HttpResponseRedirect(reverse(settings.LOGIN_REDIRECT_URL))
-
+        if login_form.is_valid() and login_form.user_cache:
+            login(request, login_form.user_cache)
+            return HttpResponseRedirect(reverse(settings.LOGIN_REDIRECT_URL))
         return render(request, self.template_name, {'login_form': login_form})
 
 

@@ -1,52 +1,63 @@
 import datetime
 
-from django.contrib import auth
-from .models import User
-from django.test import Client, TestCase
+from django.test import Client as RequestClient, TestCase
 from django.utils import timezone
 
-from .models import Client as ClientModel, Event, Contractor, BusinessType, Business, Opinion, Role
+from .models import User, Client, Event, Contractor, BusinessType, Business, Opinion, Role
 
 
 class ClientModelTests(TestCase):
-
     def setUp(self):
-        self.user = User.objects.create(username='john_smith',
-                                        first_name='John',
-                                        last_name='Smith,',
-                                        email='john_smith@example.com',
-                                        password='example_password',
-                                        role=Role.CLIENT.value,
-                                        )
+        user = User.objects.create(username='john_smith',
+                                   first_name='John',
+                                   last_name='Smith,',
+                                   email='john_smith@example.com',
+                                   password='example_password',
+                                   role=Role.CLIENT.value,
+                                   )
+        self.client = Client.objects.create(user=user)
 
     def test_get_role(self):
-        self.assertEqual(self.user.get_role(), Role.CLIENT.name)
+        self.assertEqual(self.client.user.get_role(), Role.CLIENT.name)
 
 
-class ClientViewTests(TestCase):
-
+class ClientRegistrationViewTests(TestCase):
     def test_was_client_created(self):
-        client = Client()
-        response = client.post('register-client/', {
+        self.assertEqual(0, Client.objects.all().count())
+        response = RequestClient().post('/register-client/', {
             'username': 'john_smith',
             'first_name': 'John',
             'last_name': 'Smith,',
             'email': 'john_smith@example.com',
-            'password': 'example_password',
-            'confirmed_password': 'example_password',
+            'password1': 'example_password',
+            'password2': 'example_password',
         })
 
-        # TODO: remove comment when template exists
-        # self.assertEqual(response.status_code, 200)
-        # TODO: check if we can safely use all() here
-        self.assertIsNotNone(ClientModel.objects.all())
+        self.assertRedirects(response, '/login/')
+        self.assertEqual(1, Client.objects.all().count())
+
+
+class ContractorRegistrationViewTests(TestCase):
+    def test_was_contractor_created(self):
+        self.assertEqual(0, Contractor.objects.all().count())
+        response = RequestClient().post('/register-contractor/', {
+            'username': 'john_smith',
+            'first_name': 'John',
+            'last_name': 'Smith,',
+            'email': 'john_smith@example.com',
+            'password1': 'example_password',
+            'password2': 'example_password',
+        })
+
+        self.assertRedirects(response, '/login/')
+        self.assertEqual(1, Contractor.objects.all().count())
 
 
 class EventModelTests(TestCase):
-
-    def create_client(self):
-        user = User.objects.create(username='user_for_client')
-        return ClientModel.objects.create(user=user)
+    @staticmethod
+    def create_client():
+        user = User.objects.create(username='user_for_client', role=Role.CLIENT.value)
+        return Client.objects.create(user=user)
 
     def test_event_duration(self):
         actual_time = timezone.now()
@@ -61,36 +72,35 @@ class EventModelTests(TestCase):
 
 
 class BusinessModelTests(TestCase):
+    @staticmethod
+    def create_client(username='user_for_client'):
+        user = User.objects.create(username=username, role=Role.CLIENT.value)
+        return Client.objects.create(user=user)
 
-    def create_client(self, username=None):
-        if username is None:
-            username = 'user_for_client'
-        user = User.objects.create(username=username)
-
-        return ClientModel.objects.create(user=user)
-
-    def create_contractor(self, username=None):
-        if username is None:
-            username = 'user_for_contractor'
-        user = User.objects.create(username=username)
+    @staticmethod
+    def create_contractor(username='user_for_contractor'):
+        user = User.objects.create(username=username, role=Role.CONTRACTOR.value)
         return Contractor.objects.create(user=user)
 
-    def create_business_type(self):
+    @staticmethod
+    def create_business_type():
         return BusinessType.objects.create(business_type='some_business')
 
-    def create_opinion(self, rating, business):
+    @staticmethod
+    def create_opinion(rating, business):
         return Opinion.objects.create(
             rating=rating,
             text='opinion_description',
             business=business
         )
 
-    def create_event(self, date_from, date_to, business, owner_username):
+    @staticmethod
+    def create_event(date_from, date_to, business, owner_username):
         event = Event.objects.create(
             title='event',
             date_from=date_from,
             date_to=date_to,
-            owner=self.create_client(owner_username)
+            owner=BusinessModelTests.create_client(owner_username)
         )
         event.businesses.add(business)
 
@@ -145,27 +155,34 @@ class BusinessModelTests(TestCase):
 
 
 class LoginTests(TestCase):
-    def setUp(self):
-        self.user = User(username='john_smith',
-                         password='example_password')
-        ClientModel(user=self.user)
+    userData = User(
+        username='john_smith',
+        password='example_password',
+        role=Role.CLIENT.value
+    )
 
-    # def test_login_successful(self):
-    #     client = Client()
-    #     response = client.post('/login/', {
-    #         'username': self.user.username,
-    #         'password': self.user.password,
-    #     })
-    #
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertTrue(response.wsgi_request.user.is_authenticated())
+    def setUp(self):
+        self.user = User(
+            username=self.__class__.userData.username,
+            role=self.__class__.userData.role
+        )
+        self.user.set_password('example_password')
+        self.user.save()
+
+    def test_login_successful(self):
+        response = RequestClient().post('/login/', {
+            'username': self.__class__.userData.username,
+            'password': self.__class__.userData.password,
+        })
+
+        self.assertRedirects(response, '/')
+        self.assertTrue(response.wsgi_request.user.is_authenticated)
 
     def test_login_bad_password(self):
-        client = Client()
-        response = client.post('/login/', {
-            'username': self.user.username,
+        response = RequestClient().post('/login/', {
+            'username': self.__class__.userData.username,
             'password': 'bad_password',
         })
 
         self.assertEqual(response.status_code, 200)
-        self.assertFalse(response.context['request'].user.is_authenticated)
+        self.assertFalse(response.wsgi_request.user.is_authenticated)
