@@ -6,11 +6,13 @@ from enum import Enum, auto
 class Role(Enum):
     CLIENT = auto()
     CONTRACTOR = auto()
+    ADMIN = auto()
 
 
 class User(AbstractUser):
     email = models.EmailField('email address', blank=False, unique=True)
-    role = models.PositiveSmallIntegerField(blank=False)
+    role = models.PositiveSmallIntegerField(blank=False,
+                                            default=Role.ADMIN.value)
 
     def get_role(self):
         return Role(self.role).name
