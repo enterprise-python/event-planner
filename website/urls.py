@@ -1,3 +1,4 @@
+from django.contrib.auth import views as auth_views
 from django.urls import path
 from django.views.generic import TemplateView
 
@@ -11,6 +12,10 @@ urlpatterns = [
          name='register_client'),
     path('register-contractor/', views.ContractorRegistrationView.as_view(),
          name='register_contractor'),
-    path('login/', views.LoginView.as_view(), name='login'),
-    path('logout/', views.user_logout, name='logout')
+    path('login/',
+         auth_views.LoginView.as_view(template_name='website/login.html'),
+         name='login'),
+    path('logout/',
+         auth_views.LogoutView.as_view(template_name='website/login.html'),
+         name='logout'),
 ]

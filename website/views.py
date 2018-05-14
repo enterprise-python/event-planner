@@ -1,19 +1,15 @@
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import View
 
-from eventplanner import settings
 from website.models import Role
-from .forms import ClientForm, UserForm, ContractorForm
+from .forms import ClientCreationForm, UserCreationForm, ContractorCreationForm
 
 
 class ClientRegistrationView(View):
-    user_form = UserForm
-    client_form = ClientForm
+    user_form = UserCreationForm
+    client_form = ClientCreationForm
     template_name = 'website/register_client.html'
 
     def get(self, request):
@@ -47,8 +43,8 @@ class ClientRegistrationView(View):
 
 
 class ContractorRegistrationView(View):
-    user_form = UserForm
-    contractor_form = ContractorForm
+    user_form = UserCreationForm
+    contractor_form = ContractorCreationForm
     template_name = 'website/register_contractor.html'
 
     def get(self, request):
@@ -79,25 +75,3 @@ class ContractorRegistrationView(View):
             'user_form': user_form,
             'contractor_form': contractor_form
         })
-
-
-class LoginView(View):
-    template_name = 'website/login.html'
-    login_form = AuthenticationForm
-
-    def get(self, request):
-        login_form = self.login_form(None)
-        return render(request, self.template_name, {'login_form': login_form})
-
-    def post(self, request):
-        login_form = self.login_form(request, data=request.POST)
-        if login_form.is_valid() and login_form.user_cache:
-            login(request, login_form.user_cache)
-            return HttpResponseRedirect(reverse(settings.LOGIN_REDIRECT_URL))
-        return render(request, self.template_name, {'login_form': login_form})
-
-
-@login_required
-def user_logout(request):
-    logout(request)
-    return HttpResponseRedirect(reverse('website:index'))

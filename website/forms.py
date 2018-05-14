@@ -1,9 +1,9 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm as AuthUserCreationForm
 from .models import User, Client, Contractor
 
 
-class UserForm(UserCreationForm):
+class UserCreationForm(AuthUserCreationForm):
     class Meta:
         model = User
         fields = (
@@ -16,13 +16,13 @@ class UserForm(UserCreationForm):
         )
 
 
-class ClientForm(forms.ModelForm):
+class ClientCreationForm(forms.ModelForm):
     class Meta:
         model = Client
         fields = ()
 
 
-class ContractorForm(forms.ModelForm):
+class ContractorCreationForm(forms.ModelForm):
     class Meta:
         model = Contractor
         fields = ()

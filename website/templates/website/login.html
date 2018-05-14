@@ -15,7 +15,7 @@
                             </div>
                         </div>
                         <div class="content">
-                            {% for form_field in login_form %}
+                            {% for form_field in form %}
                                 <div class="form-group form-group-no-border input-lg">
                                     <input type="{{ form_field.field.widget.input_type }}" name="{{ form_field.name }}"
                                            class="form-control"
