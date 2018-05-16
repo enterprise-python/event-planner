@@ -1,19 +1,28 @@
+from enum import Enum, auto
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from enum import Enum, auto
 
 
 class Role(Enum):
-    CLIENT = auto()
-    CONTRACTOR = auto()
+    ADMIN = 0
+    CLIENT = 1
+    CONTRACTOR = 2
 
 
 class User(AbstractUser):
     email = models.EmailField('email address', blank=False, unique=True)
-    role = models.PositiveSmallIntegerField(blank=False)
+    role = models.PositiveSmallIntegerField(blank=False,
+                                            default=Role.CLIENT.value)
+
+    def __str__(self):
+        return self.username
 
     def get_role(self):
         return Role(self.role).name
+
+    get_role.short_description = 'role'
+    get_role.admin_order_field = 'role'
 
 
 class Client(models.Model):
