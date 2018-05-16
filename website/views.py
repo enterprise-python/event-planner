@@ -7,10 +7,11 @@ from django.urls import reverse
 from django.views.generic import View
 
 from eventplanner import settings
+from website.models import Role
 from .forms import ClientForm, UserForm, ContractorForm
 
 
-class ClientFormView(View):
+class ClientRegistrationView(View):
     user_form = UserForm
     client_form = ClientForm
     template_name = 'website/register_client.html'
@@ -29,9 +30,11 @@ class ClientFormView(View):
         client_form = self.client_form(request.POST)
 
         if user_form.is_valid() and client_form.is_valid():
-            user = user_form.save()
-            client = client_form.save(commit=False)
+            user = user_form.save(commit=False)
+            user.role = Role.CLIENT.value
+            user.save()
 
+            client = client_form.save(commit=False)
             client.user = user
             client.save()
 
@@ -43,7 +46,7 @@ class ClientFormView(View):
         })
 
 
-class ContractorFormView(View):
+class ContractorRegistrationView(View):
     user_form = UserForm
     contractor_form = ContractorForm
     template_name = 'website/register_contractor.html'
@@ -62,9 +65,11 @@ class ContractorFormView(View):
         contractor_form = self.contractor_form(request.POST)
 
         if user_form.is_valid() and contractor_form.is_valid():
-            user = user_form.save()
-            contractor = contractor_form.save(commit=False)
+            user = user_form.save(commit=False)
+            user.role = Role.CONTRACTOR.value
+            user.save()
 
+            contractor = contractor_form.save(commit=False)
             contractor.user = user
             contractor.save()
 
@@ -76,7 +81,7 @@ class ContractorFormView(View):
         })
 
 
-class LoginFormView(View):
+class LoginView(View):
     template_name = 'website/login.html'
     login_form = AuthenticationForm
 
@@ -86,11 +91,9 @@ class LoginFormView(View):
 
     def post(self, request):
         login_form = self.login_form(request, data=request.POST)
-        if login_form.is_valid():
-            if login_form.user_cache:
-                login(request, login_form.user_cache)
-                return HttpResponseRedirect(reverse(settings.LOGIN_REDIRECT_URL))
-
+        if login_form.is_valid() and login_form.user_cache:
+            login(request, login_form.user_cache)
+            return HttpResponseRedirect(reverse(settings.LOGIN_REDIRECT_URL))
         return render(request, self.template_name, {'login_form': login_form})
 
 

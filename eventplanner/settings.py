@@ -103,6 +103,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+AUTH_USER_MODEL = 'website.User'
 
 LOGIN_REDIRECT_URL = 'website:index'
 LOGIN_URL = 'website:login'
