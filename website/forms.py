@@ -29,14 +29,14 @@ class ContractorCreationForm(forms.ModelForm):
         fields = ()
 
 
-class UserEditForm(UserChangeForm):
+class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
         fields = (
             'username',
             'first_name',
             'last_name',
-            'email',
+            'email'
         )
 
 
