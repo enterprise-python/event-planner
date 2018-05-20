@@ -16,7 +16,7 @@ from .forms import ClientCreationForm, UserCreationForm, ContractorCreationForm,
 class ClientRegistrationView(View):
     user_form = UserCreationForm
     client_form = ClientCreationForm
-    template_name = 'website/register_client.html'
+    template_name = 'website/pages/register_client.html'
 
     def get(self, request):
         user_form = self.user_form(None)
@@ -51,7 +51,7 @@ class ClientRegistrationView(View):
 class ContractorRegistrationView(View):
     user_form = UserCreationForm
     contractor_form = ContractorCreationForm
-    template_name = 'website/register_contractor.html'
+    template_name = 'website/pages/register_contractor.html'
 
     def get(self, request):
         user_form = self.user_form(None)
@@ -102,7 +102,7 @@ class ClientEditView(UpdateView):
                           'change_password_form': change_password_form
                       })
 
-    def post(self, request):
+    def post(self, request, **kwargs):
         user_edit_form = self.user_edit_form(request.POST,
                                              instance=request.user)
         client_edit_form = self.client_edit_form(request.POST,
