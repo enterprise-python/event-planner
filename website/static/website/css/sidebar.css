@@ -245,7 +245,7 @@ img {
 .content-center {
     pointer-events: visible;
     position: relative;
-    margin-top: 10%;
+    padding-top: 15%;
     text-align: center;
 }
 
