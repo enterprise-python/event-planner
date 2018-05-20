@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from .models import Client, Contractor
 
 
-class UserForm(UserCreationForm):
+class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = (
@@ -13,8 +13,6 @@ class UserForm(UserCreationForm):
             'first_name',
             'last_name',
             'email',
-            'password1',
-            'password2'
         )
 
 

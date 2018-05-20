@@ -13,11 +13,11 @@ from .forms import ClientForm, UserForm, ContractorForm
 class ClientFormView(View):
     user_form = UserForm
     client_form = ClientForm
-    template_name = 'website/register_client.html'
+    template_name = 'website/pages/main_page.html'
 
     def get(self, request):
-        user_form = self.user_form(None)
-        client_form = self.client_form(None)
+        user_form = self.user_form(request.GET, instance=request.user)
+        client_form = self.client_form(request.GET, instance=request.user)
 
         return render(request, self.template_name, {
             'user_form': user_form,
@@ -25,8 +25,8 @@ class ClientFormView(View):
         })
 
     def post(self, request):
-        user_form = self.user_form(request.POST)
-        client_form = self.client_form(request.POST)
+        user_form = self.user_form(request.POST, instance=request.user)
+        client_form = self.client_form(request.POST, instance=request.user)
 
         if user_form.is_valid() and client_form.is_valid():
             user = user_form.save()
@@ -46,7 +46,7 @@ class ClientFormView(View):
 class ContractorFormView(View):
     user_form = UserForm
     contractor_form = ContractorForm
-    template_name = 'website/register_contractor.html'
+    template_name = 'website/pages/register_contractor.html'
 
     def get(self, request):
         user_form = self.user_form(None)
@@ -77,7 +77,7 @@ class ContractorFormView(View):
 
 
 class LoginFormView(View):
-    template_name = 'website/login.html'
+    template_name = 'website/pages/login.html'
     login_form = AuthenticationForm
 
     def get(self, request):
