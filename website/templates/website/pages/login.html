@@ -1,13 +1,11 @@
-{% extends 'website/base.html' %}
-
+{% extends 'website/pages/base.html' %}
 {% load staticfiles %}
-
 {% block content %}
     <div class="page-header" filter-color="orange">
-        <div class="page-header-image" style="background-image:url({% static 'website/img/bg_register.jpg' %})"></div>
+        <div class="page-header-image" style="background-image:url({% static 'website/img/bg_login.jpg' %})"></div>
 
-        <div class="container col-md-5">
-            <div class="content-center">
+        <div class="container col-md-3">
+            <div class="col-md-4 content-center">
                 <div class="card card-login card-plain">
                     <form class="form" method="post" action="">
                         {% csrf_token %}
@@ -17,14 +15,7 @@
                             </div>
                         </div>
                         <div class="content">
-                            {% for form_field in user_form %}
-                                <div class="form-group form-group-no-border input-lg">
-                                    <input type="{{ form_field.field.widget.input_type }}" name="{{ form_field.name }}"
-                                           class="form-control"
-                                           placeholder="{{ form_field.label }}...">
-                                </div>
-                            {% endfor %}
-                            {% for form_field in contractor_form %}
+                            {% for form_field in form %}
                                 <div class="form-group form-group-no-border input-lg">
                                     <input type="{{ form_field.field.widget.input_type }}" name="{{ form_field.name }}"
                                            class="form-control"
@@ -33,7 +24,7 @@
                             {% endfor %}
                         </div>
                         <div class="footer text-center">
-                            <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Register!</button>
+                            <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Login</button>
                         </div>
                     </form>
                 </div>
