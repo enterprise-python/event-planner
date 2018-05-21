@@ -1,0 +1,45 @@
+<ul class="list-unstyled components">
+    <li>
+        <a href="{% url 'website:profile' %}">
+            <i class="material-icons">person</i>
+            <p>User Profile</p>
+        </a>
+
+        <a href="#businesses_menu" data-toggle="collapse" aria-expanded="false">
+            <i class="material-icons">people</i>
+            <p>Businesses</p>
+        </a>
+        <ul class="collapse list-unstyled" id="businesses_menu">
+            <li>
+                <a href="#">
+                    <p>Business 1</p>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <p>Business 2</p>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <p>Business 3</p>
+                </a>
+            </li>
+        </ul>
+
+        <a href="#">
+            <i class="material-icons">star</i>
+            <p>Ranking</p>
+        </a>
+
+        <a href="#">
+            <i class="material-icons text-gray">notifications</i>
+            <p>Notifications</p>
+        </a>
+
+        <a href="{% url 'website:logout' %}">
+            <i class="material-icons text-gray">power_settings_new</i>
+            <p>Log out</p>
+        </a>
+    </li>
+</ul>

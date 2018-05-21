@@ -105,6 +105,6 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'website.User'
 
-LOGIN_REDIRECT_URL = 'website:index'
+LOGIN_REDIRECT_URL = 'website:main'
 LOGIN_URL = 'website:login'
 LOGOUT_REDIRECT_URL = 'website:index'

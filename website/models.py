@@ -13,7 +13,7 @@ class Role(Enum):
 class User(AbstractUser):
     email = models.EmailField('email address', blank=False, unique=True)
     role = models.PositiveSmallIntegerField(blank=False,
-                                            default=Role.CLIENT.value)
+                                            default=Role.ADMIN.value)
 
     def __str__(self):
         return self.username

@@ -1,0 +1,33 @@
+{% extends 'website/pages/base.html' %}
+
+{% load staticfiles %}
+
+{% block content %}
+<div class="main-image" id="filter" data-parallax="true" style="background-image:
+        {% if user.is_client %}
+            url({% static 'website/img/party-desk.jpg' %})
+        {% else %}
+            url({% static 'website/img/table.jpg' %})
+        {% endif %}">
+    <div class="container">
+        <div class="content-center">
+            <div class="photo-container">
+                <a href="photo-change"></a>
+                <img class="cover" src={% static 'website/img/no-image.png' %} alt="">
+            </div>
+{#            <p class="info">{{ request.user.username }}</p>#}
+            <h3 class="title">{{ request.user.first_name }} {{ request.user.last_name }} ({{ request.user.username }})</h3>
+            <p class="info">{{ request.user.email }}</p>
+        </div>
+    </div>
+</div>
+     <div class="button-container">
+         <a href="{% url 'website:edit' %}" class="btn btn-primary btn-round btn-lg">Edit profile</a>
+         <a href="#button" class="btn btn-primary btn-round btn-lg">Show Events</a>
+     </div>
+    <div class="description-container">
+        <h3 class="title">About me</h3>
+        <h5 class="description">I am a new user of Event Planner and I have no description yet.</h5>
+    </div>
+
+{% endblock content %}

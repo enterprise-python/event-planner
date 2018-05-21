@@ -1,0 +1,78 @@
+{% extends 'website/pages/base.html' %}
+
+{% load staticfiles %}
+
+{% block content %}
+<div class="page-header" id="edit-page-header">
+    <div class="page-header-image"
+         style="background-image:url({% static 'website/img/notebook.jpg' %})">
+    </div>
+    <div class="content-center" id="edit-content-center">
+        <div class="photo-container">
+            <a href="photo-change"></a>
+            <img class="cover" src={% static 'website/img/no-image.png' %} alt="">
+        </div>
+        <div class="button-container">
+            <a href="#button" class="btn btn-primary btn-round btn-lg" id="change-photo">Edit avatar</a>
+        </div>
+        <div class="row">
+        <div class="col-sm-6">
+            <div class="card card-login card-plain">
+                <form class="form" method="post" action="">
+                    {% csrf_token %}
+                    <div>
+                        <h4>Edit your personal data</h4>
+                    </div>
+                    <div class="content">
+                        {% for form_field in user_edit_form %}
+                            <div class="form-group form-group-no-border input-lg">
+                                <input type="{{ form_field.field.widget.input_type }}" name="{{ form_field.name }}"
+                                       class="form-control" value="{{ form_field.value }}">
+                            </div>
+                        {% endfor %}
+                        {% for form_field in client_edit_form %}
+                            <div class="form-group form-group-no-border input-lg">
+                                <input type="{{ form_field.field.widget.input_type }}" name="{{ form_field.name }}"
+                                       class="form-control"
+                                       value="{{ form_field.value }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="footer text-center">
+                        <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Confirm changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card card-login card-plain">
+                <form class="form" method="post" action="">
+                    {% csrf_token %}
+                    <div>
+                        <h4>Change password</h4>
+                    </div>
+                    <div class="content">
+                        {% for form_field in change_password_form %}
+                            <div class="form-group form-group-no-border input-lg">
+                                <input type="{{ form_field.field.widget.input_type }}" name="{{ form_field.name }}"
+                                       class="form-control" placeholder="{{ form_field.label }}...">
+                            </div>
+                        {% endfor %}
+                        {% for form_field in client_form %}
+                            <div class="form-group form-group-no-border input-lg">
+                                <input type="{{ form_field.field.widget.input_type }}" name="{{ form_field.name }}"
+                                       class="form-control"
+                                       placeholder="{{ form_field.label }}...">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="footer text-center">
+                        <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Confirm changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock content%}
