@@ -22,7 +22,7 @@ urlpatterns = [
     path('profile/', login_required(TemplateView.as_view(
         template_name="website/pages/profile.html")),
          name='profile'),
-    path('profile/edit/', login_required(views.ClientEditView.as_view()), name='edit'),
+    path('profile/edit/', login_required(views.ProfileEditView.as_view()), name='edit'),
     path('main/', login_required(TemplateView.as_view(
         template_name="website/pages/main_page.html")),
          name='main'),
