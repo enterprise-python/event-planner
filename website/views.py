@@ -81,7 +81,7 @@ class ContractorRegistrationView(View):
         })
 
 
-class ClientEditView(View):
+class ProfileEditView(View):
     user_edit_form = UserEditForm
     client_edit_form = ClientEditForm
     contractor_edit_form = ContractorEditForm
