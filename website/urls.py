@@ -1,4 +1,5 @@
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.decorators import login_required
 from django.urls import path, reverse_lazy
 from django.views.generic import TemplateView
 
@@ -18,8 +19,11 @@ urlpatterns = [
     path('logout/',
          auth_views.LogoutView.as_view(template_name='website/pages/login.html'),
          name='logout'),
-    path('profile/', TemplateView.as_view(
-        template_name="website/pages/profile.html"),
+    path('profile/', login_required(TemplateView.as_view(
+        template_name="website/pages/profile.html")),
          name='profile'),
-    path('profile/edit/', views.ClientEditView.as_view(), name='edit')
+    path('profile/edit/', login_required(views.ClientEditView.as_view()), name='edit'),
+    path('main/', login_required(TemplateView.as_view(
+        template_name="website/pages/main_page.html")),
+         name='main'),
 ]
