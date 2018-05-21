@@ -39,13 +39,17 @@ class EventModelTests(TestCase):
 
 class BusinessModelTests(TestCase):
     @staticmethod
-    def create_client(username='user_for_client'):
-        user = User.objects.create(username=username, role=Role.CLIENT.value)
+    def create_client(username='user_for_client', email='example@mail.com'):
+        user = User.objects.create(username=username, role=Role.CLIENT.value,
+                                   email=email)
         return Client.objects.create(user=user)
 
     @staticmethod
-    def create_contractor(username='user_for_contractor'):
-        user = User.objects.create(username=username, role=Role.CONTRACTOR.value)
+    def create_contractor(username='user_for_contractor',
+                          email='example@mail.com'):
+        user = User.objects.create(username=username,
+                                   role=Role.CONTRACTOR.value,
+                                   email=email)
         return Contractor.objects.create(user=user)
 
     @staticmethod
@@ -61,29 +65,29 @@ class BusinessModelTests(TestCase):
         )
 
     @staticmethod
-    def create_event(date_from, date_to, business, owner_username):
+    def create_event(date_from, date_to, business, owner_username, owner_email):
         event = Event.objects.create(
             title='event',
             date_from=date_from,
             date_to=date_to,
-            owner=BusinessModelTests.create_client(owner_username)
+            owner=BusinessModelTests.create_client(owner_username, owner_email)
         )
         event.businesses.add(business)
 
     def setUp(self):
         self.business = Business.objects.create(
             name='business_name',
-            business_type=self.create_business_type(),
-            owner=self.create_contractor()
+            business_type=BusinessModelTests.create_business_type(),
+            owner=BusinessModelTests.create_contractor()
         )
 
     def test_no_average_rating_due_to_no_opinions(self):
         self.assertIsNone(self.business.get_average_rating())
 
     def test_average_rating(self):
-        self.create_opinion(5, self.business)
-        self.create_opinion(4, self.business)
-        self.create_opinion(3, self.business)
+        BusinessModelTests.create_opinion(5, self.business)
+        BusinessModelTests.create_opinion(4, self.business)
+        BusinessModelTests.create_opinion(3, self.business)
 
         self.assertEqual(self.business.get_average_rating(), 4)
 
@@ -97,10 +101,10 @@ class BusinessModelTests(TestCase):
         second_event_from = first_event_to + time_between_events
         second_event_to = second_event_from + event_duration
 
-        self.create_event(first_event_from, first_event_to, self.business,
-                          'usr1')
-        self.create_event(second_event_from, second_event_to, self.business,
-                          'usr2')
+        BusinessModelTests.create_event(first_event_from, first_event_to,
+                                        self.business, 'usr1', 'usr1@mail.com')
+        BusinessModelTests.create_event(second_event_from, second_event_to,
+                                        self.business, 'usr2', 'usr2@mail.com')
 
         event_schedule = self.business.get_event_schedule()
         self.assertEqual(len(event_schedule), 2)
