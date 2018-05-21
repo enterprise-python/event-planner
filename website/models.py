@@ -1,33 +1,42 @@
+from enum import Enum
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from enum import Enum, auto
 
 
 class Role(Enum):
-    CLIENT = auto()
-    CONTRACTOR = auto()
+    ADMIN = 0
+    CLIENT = 1
+    CONTRACTOR = 2
 
 
 class User(AbstractUser):
     email = models.EmailField('email address', blank=False, unique=True)
-    role = models.PositiveSmallIntegerField(blank=False)
+    role = models.PositiveSmallIntegerField(blank=False,
+                                            default=Role.CLIENT.value)
+
+    def __str__(self):
+        return self.username
 
     def get_role(self):
         return Role(self.role).name
+
+    get_role.short_description = 'role'
+    get_role.admin_order_field = 'role'
 
 
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user.username
+        return 'client {}'.format(self.user.username)
 
 
 class Contractor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user.username
+        return 'contractor {}'.format(self.user.username)
 
 
 class BusinessType(models.Model):
@@ -54,6 +63,10 @@ class Business(models.Model):
         if opinions:
             return sum(opinion.rating for opinion in opinions) / len(opinions)
 
+    get_average_rating.short_description = 'average rating'
+    get_average_rating.empty_value_display = 'no opinions'
+    get_average_rating.admin_order_field = 'name'
+
     def get_event_schedule(self):
         event_schedule = []
         for event_id, event in enumerate(self.event_set.all()):
@@ -75,16 +88,24 @@ class Event(models.Model):
     def get_duration(self):
         return self.date_to - self.date_from
 
+    get_duration.short_description = 'duration'
+    get_duration.admin_order_field = 'date_from'
+
 
 class Opinion(models.Model):
     RATINGS = (
-        ('1', 'Very bad'),
-        ('2', 'Bad'),
-        ('3', 'Average'),
-        ('4', 'Good'),
-        ('5', 'Excellent'),
+        (1, 'Very bad'),
+        (2, 'Bad'),
+        (3, 'Average'),
+        (4, 'Good'),
+        (5, 'Excellent'),
     )
 
     rating = models.PositiveSmallIntegerField(choices=RATINGS)
-    text = models.CharField(max_length=500)
+    text = models.TextField(max_length=500)
     business = models.ForeignKey(Business, on_delete=models.CASCADE)
+
+    def __str__(self):
+        text_limit = 50
+        return self.text if len(self.text) <= text_limit else '{}...'.format(
+            self.text[:text_limit])
