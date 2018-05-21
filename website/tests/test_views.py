@@ -108,7 +108,7 @@ class LoginTests(TestCase):
             'password': self.__class__.userData.password,
         })
 
-        self.assertRedirects(response, '/')
+        self.assertRedirects(response, '/main/')
         self.assertTrue(response.wsgi_request.user.is_authenticated)
 
     def test_login_bad_password(self):
