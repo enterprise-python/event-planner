@@ -15,8 +15,8 @@
                 <a href="photo-change"></a>
                 <img class="cover" src={% static 'website/img/no-image.png' %} alt="">
             </div>
-{#            <p class="info">{{ request.user.username }}</p>#}
-            <h3 class="title">{{ request.user.first_name }} {{ request.user.last_name }} ({{ request.user.username }})</h3>
+            <p class="info">{{ request.user.username }}</p>
+            <h3 class="title">{{ request.user.first_name }} {{ request.user.last_name }}</h3>
             <p class="info">{{ request.user.email }}</p>
         </div>
     </div>

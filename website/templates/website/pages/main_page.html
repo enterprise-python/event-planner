@@ -6,7 +6,7 @@
 <div class="main-image" data-parallax="true" style="background-image: url({% static 'website/img/magda-fou-421485-unsplash.jpg' %})">
     <div class="container">
         <h1 id="bottom" class="title">Event Planner</h1>
-        {% if user_is_client %}
+        {% if request.user.is_client() %}
         <a href="#events" class="btn btn-primary btn-round">Create an Event!</a>
         {% endif %}
     </div>
@@ -14,7 +14,9 @@
 <div class="section section-about-us">
     <div class="container">
         <div class="row">
+            <div class="col-md-12">
             <h2 class="title">Have it done!</h2>
+            </div>
             <h5 class="description">Have you ever had to plan wedding, your daugther birthday party, business meeting or your best friend's stag night? If so, you probably know how long does it take... Save your precious time and have it done with Event Planner! We are worldwide platform where clients can choose from hundreds of offers from different kinds of services located in their area, book dates and directly contact with contractors. Keep everything in one organized place and just enjoy the event!</h5>
         </div>
         <div class="section-story-overview">
@@ -37,7 +39,9 @@
         </div>
         <div class="section-description">
             <div class="row">
+                <div class="col-md-12">
                 <h2 class="title">How does it work?</h2>
+                </div>
                 <h5 class="description">Lorem ipsum dolor sit amet, pro suas hinc errem et. Eum ne ferri euismod, augue timeam ex pri. Vis duis consul luptatum et, ei usu quaeque minimum... Odio postea ad his, ne vim cetero saperet gloriatur, ea debitis contentiones eos.
                 </h5>
             </div>

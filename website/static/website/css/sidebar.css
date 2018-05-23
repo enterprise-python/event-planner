@@ -175,7 +175,7 @@ ul.CTAs a {
 #filter{
     pointer-events: none;
     position: relative;
-    height: 420px;
+    height: 460px;
     background-size: cover;
 
 }
@@ -297,4 +297,8 @@ img {
     font-size: 1.5em;
     margin: 1%;
     padding: 1%;
+}
+
+.white-text {
+    color: white;
 }
