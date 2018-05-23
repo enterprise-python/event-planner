@@ -91,7 +91,7 @@ class ProfileEditView(View):
     def get(self, request):
         if request.user.role == Role.CLIENT.value:
             return self.get_client(request)
-        elif request.user.role.value == Role.CONTRACTOR.value:
+        elif request.user.role == Role.CONTRACTOR.value:
             return self.get_contractor(request)
 
     def get_client(self, request):
