@@ -24,6 +24,15 @@ class User(AbstractUser):
     get_role.short_description = 'role'
     get_role.admin_order_field = 'role'
 
+    def is_admin(self):
+        return self.get_role() == Role.ADMIN.name
+
+    def is_client(self):
+        return self.get_role() == Role.CLIENT.name
+
+    def is_contractor(self):
+        return self.get_role() == Role.CONTRACTOR.name
+
 
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
