@@ -4,6 +4,26 @@ from website.models import User, Client, Event, Contractor, BusinessType, Busine
 import datetime
 
 
+class UserModelTests(TestCase):
+    def test_is_admin(self):
+        user = User.objects.create(username='user',
+                                   email='user@example.com',
+                                   role=Role.ADMIN.value)
+        self.assertTrue(user.is_admin())
+
+    def test_is_client(self):
+        user = User.objects.create(username='user',
+                                   email='user@example.com',
+                                   role=Role.CLIENT.value)
+        self.assertTrue(user.is_client())
+
+    def test_is_contractor(self):
+        user = User.objects.create(username='user',
+                                   email='user@example.com',
+                                   role=Role.CONTRACTOR.value)
+        self.assertTrue(user.is_contractor())
+
+
 class ClientModelTests(TestCase):
     def setUp(self):
         user = User.objects.create(username='john_smith',
