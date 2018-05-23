@@ -6,7 +6,7 @@
             Event Planner
         </a>
     </div>
-    {% if request.user.is_client() %}
+    {% if request.user.is_client %}
         {% include 'website/page_elements/client_sidebar.html' %}
     {% else %}
         {% include 'website/page_elements/contractor_sidebar.html' %}
