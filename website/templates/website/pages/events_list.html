@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% if events_list %}
+    {% for event in events_list %}
+        <h1>Title: {{ event.title }}</h1>
+        <p>Date from: {{ event.date_from }}</p>
+        <p>Date to: {{ event.date_to }}</p>
+    {% endfor %}
+{% else %}
+    <p>No events!</p>
+{% endif %}
+</body>
+</html>
