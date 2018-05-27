@@ -67,6 +67,5 @@ class BusinessForm(forms.ModelForm):
         fields = (
             'name',
             'business_type',
-            'owner',
             'description'
         )
