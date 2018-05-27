@@ -89,9 +89,9 @@ class ProfileEditView(View):
     template_name = "website/pages/edit_profile.html"
 
     def get(self, request):
-        if request.user.role == Role.CLIENT.value:
+        if request.user.is_client():
             return self.get_client(request)
-        elif request.user.role == Role.CONTRACTOR.value:
+        elif request.user.is_contractor():
             return self.get_contractor(request)
 
     def get_client(self, request):
@@ -119,9 +119,9 @@ class ProfileEditView(View):
                       })
 
     def post(self, request):
-        if request.user.role == Role.CLIENT.value:
+        if request.user.is_client():
             return self.post_client(request)
-        elif request.user.role.value == Role.CONTRACTOR.value:
+        elif request.user.is_contractor():
             return self.post_contractor(request)
 
     def post_client(self, request):
