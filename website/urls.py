@@ -27,5 +27,7 @@ urlpatterns = [
         template_name="website/pages/main_page.html")),
          name='main'),
     path('businesses/', views.BusinessesListView.as_view(),
-         name='businesses')
+         name='businesses'),
+    path('ranking/', views.RankingView.as_view(),
+         name='ranking')
 ]

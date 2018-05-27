@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
+from django.db.models import F
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -193,3 +194,11 @@ class BusinessesListView(ListView):
 
     def get_queryset(self):
         return Business.objects.all()
+
+
+class RankingView(ListView):
+    template_name = 'website/pages/ranking.html'
+    context_object_name = 'businesses_list'
+
+    def get_queryset(self):
+        return Business.objects.annotate(average_rating=F('get_average_rating')).order_by('-average_rating')[:10]
