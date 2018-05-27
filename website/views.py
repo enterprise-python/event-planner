@@ -1,15 +1,15 @@
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
-from django.db.models import F
-from django.http import HttpResponseRedirect
+
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.urls import reverse
-from django.views.generic import View, ListView
+from django.views.generic import View, ListView, DetailView
 
-from website.models import Role, Business
+from website.models import Role, Business, Event
 from .forms import ClientCreationForm, UserCreationForm, ContractorCreationForm, \
-    UserEditForm, ClientEditForm, ContractorEditForm
+    UserEditForm, ClientEditForm, ContractorEditForm, EventForm, BusinessForm
 
 
 class ClientRegistrationView(View):
@@ -188,6 +188,102 @@ class ProfileEditView(View):
                       })
 
 
+class EventsListView(ListView):
+    context_object_name = 'events_list'
+    template_name = 'website/pages/events_list.html'
+
+    def get_queryset(self):
+        if not self.request.user.is_client():
+            raise Http404()
+
+        return Event.objects.filter(owner=self.request.user.client).order_by(
+            'date_from')
+
+
+class EventDetailView(DetailView):
+    model = Event
+    context_object_name = 'event'
+    template_name = 'website/pages/event.html'
+
+    def get_object(self, queryset=None):
+        event = super().get_object(queryset)
+
+        if (not self.request.user.is_client()
+                or not self.request.user.client.event_set.filter(pk=event.pk)):
+            raise Http404()
+
+        return event
+
+
+class AddEventView(View):
+    event_form = EventForm
+    template_name = 'website/pages/add_event.html'
+
+    def get(self, request):
+        if not request.user.is_client():
+            raise Http404()
+
+        return render(request, self.template_name, {
+            'event_form': self.event_form(None)
+        })
+
+    def post(self, request):
+        if not request.user.is_client():
+            raise Http404
+
+        event_form = self.event_form(request.POST)
+
+        if event_form.is_valid():
+            event = event_form.save(commit=False)
+            event.owner = request.user.client
+            event.save()
+
+            return HttpResponseRedirect(reverse('website:events'))
+
+        return render(request, self.template_name, {
+            'event_form': self.event_form
+        })
+
+
+class EditEventView(View):
+    event_form = EventForm
+    template_name = 'website/pages/edit_event.html'
+
+    @staticmethod
+    def _check_event_owner(request, pk):
+        if not request.user.is_client():
+            raise Http404()
+
+        for event in Event.objects.filter(owner=request.user.client):
+            if event.pk == pk:
+                break
+        else:
+            raise Http404()
+
+    def get(self, request, pk):
+        self._check_event_owner(request, pk)
+
+        return render(request, self.template_name, {
+            'event_form': self.event_form(instance=Event.objects.filter(pk=pk))
+        })
+
+    def post(self, request, pk):
+        self._check_event_owner(request, pk)
+
+        event_form = self.event_form(request.POST,
+                                     instance=Event.objects.filter(pk=pk))
+        if event_form.is_valid():
+            event_form.save()
+            messages.success(request, 'Your event was successfully updated!')
+
+            return HttpResponseRedirect(reverse('website:events'))
+
+        messages.error(request, 'Please correct the error below.')
+        return render(request, self.template_name, {
+            'event_form': event_form
+        })
+
+
 class BusinessesListView(ListView):
     template_name = 'website/pages/businesses_list.html'
     context_object_name = 'businesses_list'
@@ -204,3 +300,74 @@ class RankingView(ListView):
         return sorted(Business.objects.all(),
                       key=lambda b: b.get_average_rating(),
                       reverse=True)[:10]
+
+
+class AddBusinessView(View):
+    business_form = BusinessForm
+    template_name = 'website/pages/add_business.html'
+
+    def get(self, request):
+        if not request.user.is_contractor():
+            raise Http404()
+
+        return render(request, self.template_name, {
+            'business_form': self.business_form(None)
+        })
+
+    def post(self, request):
+        if not request.user.is_contractor():
+            raise Http404()
+
+        business_form = self.business_form(request.POST)
+
+        if business_form.is_valid():
+            business = business_form.save(commit=False)
+            business.owner = request.user.contractor
+            business.save()
+
+            return HttpResponseRedirect(reverse('website:main'))
+
+        return render(request, self.template_name, {
+            'business_form': business_form
+        })
+
+
+class EditBusinessView(View):
+    business_form = BusinessForm
+    template_name = 'website/pages/edit_business.html'
+
+    @staticmethod
+    def _check_business_owner(request, pk):
+        if not request.user.is_contractor():
+            raise Http404()
+
+        for business in Business.objects.filter(owner=request.user.client):
+            if business.pk == pk:
+                break
+        else:
+            raise Http404()
+
+    def get(self, request, pk):
+        self._check_business_owner(request, pk)
+
+        return render(request, self.template_name, {
+            'business_form': self.business_form(
+                instance=Business.objects.filter(pk=pk))
+        })
+
+    def post(self, request, pk):
+        self._check_business_owner(request, pk)
+
+        business_form = self.business_form(request.POST,
+                                           instance=Business.objects.filter(
+                                               pk=pk))
+        if business_form.is_valid():
+            business_form.save()
+            messages.success(request, 'Your business was successfully updated!')
+
+            return HttpResponseRedirect(reverse('website:main'))
+
+        messages.error(request, 'Please correct the error below.')
+        return render(request, self.template_name, {
+            'business_form': business_form
+        })

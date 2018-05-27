@@ -132,9 +132,11 @@ class BusinessModelTests(TestCase):
         second_event_to = second_event_from + event_duration
 
         BusinessModelUtilities.create_event(first_event_from, first_event_to,
-                                        self.business, 'usr1', 'usr1@mail.com')
+                                            self.business, 'usr1',
+                                            'usr1@mail.com')
         BusinessModelUtilities.create_event(second_event_from, second_event_to,
-                                        self.business, 'usr2', 'usr2@mail.com')
+                                            self.business, 'usr2',
+                                            'usr2@mail.com')
 
         event_schedule = self.business.get_event_schedule()
         self.assertEqual(len(event_schedule), 2)
