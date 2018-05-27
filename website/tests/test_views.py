@@ -4,7 +4,8 @@ from django.test import Client as RequestClient, TestCase
 from django.utils import timezone
 
 from website.models import Client, Contractor, Event, Role, User
-from website.tests.test_models import (create_client, create_contractor,
+from website.tests.test_models import (create_business, create_business_type,
+                                       create_client, create_contractor,
                                        create_event)
 
 
@@ -186,6 +187,25 @@ class LoginTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.wsgi_request.user.is_authenticated)
+
+
+class BusinessesListTests(TestCase):
+
+    def setUp(self):
+        business_type = create_business_type()
+        self.owner = create_contractor()
+
+        for i in range(15):
+            create_business(
+                name='business_{}'.format(i),
+                business_type=business_type,
+                owner=self.owner
+            )
+
+    def test_businesses_display(self):
+        response = RequestClient().get('/businesses/')
+        self.assertEqual(response.context['businesses_list'][0].name,
+                         'business_0')
 
 
 class EventTests(TestCase):

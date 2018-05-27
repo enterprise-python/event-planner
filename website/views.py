@@ -265,6 +265,24 @@ class EditEventView(View):
         })
 
 
+class BusinessesListView(ListView):
+    template_name = 'website/pages/businesses_list.html'
+    context_object_name = 'businesses_list'
+
+    def get_queryset(self):
+        return Business.objects.all()
+
+
+class RankingView(ListView):
+    template_name = 'website/pages/ranking.html'
+    context_object_name = 'businesses_list'
+
+    def get_queryset(self):
+        return sorted(Business.objects.all(),
+                      key=lambda b: b.get_average_rating(),
+                      reverse=True)[:10]
+
+
 class AddBusinessView(View):
     business_form = BusinessForm
     template_name = 'website/pages/add_business.html'
