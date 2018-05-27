@@ -159,7 +159,7 @@ class ProfileEditView(View):
         user_edit_form = self.user_edit_form(request.POST,
                                              instance=request.user)
         contractor_edit_form = self.contractor_edit_form(request.POST,
-                                                 instance=request.user)
+                                                         instance=request.user)
         change_password_form = self.change_password_form(request.user,
                                                          request.POST)
 
