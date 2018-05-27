@@ -208,8 +208,7 @@ class EventDetailView(DetailView):
         event = super().get_object(queryset)
 
         if (not self.request.user.is_client()
-                or self.request.user.client.event_set.filter_or_404(
-                    pk=event.pk)):
+                or not self.request.user.client.event_set.filter(pk=event.pk)):
             raise Http404()
 
         return event
@@ -228,9 +227,12 @@ class AddEventView(View):
         })
 
     def post(self, request):
+        if not request.user.is_client():
+            raise Http404
+
         event_form = self.event_form(request.POST)
 
-        if request.user.is_client() and event_form.is_valid():
+        if event_form.is_valid():
             event = event_form.save(commit=False)
             event.owner = request.user.client
             event.save()
