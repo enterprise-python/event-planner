@@ -8,7 +8,7 @@ from django.views.generic import View
 
 from website.models import Role
 from .forms import ClientCreationForm, UserCreationForm, ContractorCreationForm, \
-    UserEditForm, ClientEditForm, ContractorEditForm
+    UserEditForm, ClientEditForm, ContractorEditForm, BusinessForm
 
 
 class ClientRegistrationView(View):
@@ -185,3 +185,20 @@ class ProfileEditView(View):
                           'contractor_edit_form': contractor_edit_form,
                           'change_password_form': change_password_form
                       })
+
+
+class AddBusinessView(View):
+    business_form = BusinessForm
+    template_name = 'website/pages/add_business.html'
+
+    def get(self, request):
+        return render(request, self.template_name, {
+            'business_form': self.business_form(None)
+        })
+
+    def post(self, request):
+        business_form = self.business_form(request.POST,
+                                           instance=request.user.is_contractor)
+        if business_form.is_valid():
+            business = business_form.save(commit=False)
+            business.owner = request.user.contractor

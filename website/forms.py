@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm as AuthUserCreationForm, \
     UserChangeForm
-from .models import User, Client, Contractor
+from .models import User, Client, Contractor, Business
 
 
 class UserCreationForm(AuthUserCreationForm):
@@ -50,3 +50,14 @@ class ContractorEditForm(forms.ModelForm):
     class Meta:
         model = Contractor
         fields = ()
+
+
+class BusinessForm(forms.ModelForm):
+    class Meta:
+        model = Business
+        fields = (
+            'name',
+            'business_type',
+            'owner',
+            'description'
+        )
