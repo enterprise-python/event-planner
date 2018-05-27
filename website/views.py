@@ -201,4 +201,6 @@ class RankingView(ListView):
     context_object_name = 'businesses_list'
 
     def get_queryset(self):
-        return Business.objects.annotate(average_rating=F('get_average_rating')).order_by('-average_rating')[:10]
+        return sorted(Business.objects.all(),
+                      key=lambda b: b.get_average_rating(),
+                      reverse=True)[:10]
