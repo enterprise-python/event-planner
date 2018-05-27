@@ -1,6 +1,10 @@
-from django.test import Client as RequestClient, TestCase
+import datetime
 
-from website.models import User, Client, Contractor, Role
+from django.test import Client as RequestClient, TestCase
+from django.utils import timezone
+
+from website.models import User, Client, Contractor, Role, Event
+from website.tests.test_models import BusinessModelUtilities
 
 
 class ClientRegistrationTests(TestCase):
@@ -119,3 +123,140 @@ class LoginTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.wsgi_request.user.is_authenticated)
+
+
+class EventTests(TestCase):
+
+    def setUp(self):
+        self.client = BusinessModelUtilities.create_client(
+            email='client@mail.com')
+        self.contractor = BusinessModelUtilities.create_contractor(
+            email='contractor@mail.com'
+        )
+
+    def test_event_list_reachable_by_client(self):
+        c = RequestClient()
+        c.force_login(self.client.user)
+        response = c.get('/events/')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_event_list_unreachable_by_contractor(self):
+        c = RequestClient()
+        c.force_login(self.contractor.user)
+        response = c.get('/events/')
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_event_detail_view_reachable_by_event_owner(self):
+        now = timezone.now()
+        event = Event.objects.create(
+            title='event',
+            date_from=now,
+            date_to=now + datetime.timedelta(days=1),
+            owner=self.client
+        )
+
+        c = RequestClient()
+        c.force_login(self.client.user)
+        response = c.get('/events/{}/'.format(event.pk))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_event_detail_view_unreachable_by_different_client(self):
+        now = timezone.now()
+        event = Event.objects.create(
+            title='event',
+            date_from=now,
+            date_to=now + datetime.timedelta(days=1),
+            owner=self.client
+        )
+
+        another_client = BusinessModelUtilities.create_client(
+            username='another_user',
+            email='another_client@mail.com'
+        )
+
+        c = RequestClient()
+        c.force_login(another_client.user)
+        response = c.get('/events/{}/'.format(event.pk))
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_event_detail_view_unreachable_by_contractor(self):
+        now = timezone.now()
+        event = Event.objects.create(
+            title='event',
+            date_from=now,
+            date_to=now + datetime.timedelta(days=1),
+            owner=self.client
+        )
+
+        c = RequestClient()
+        c.force_login(self.contractor.user)
+        response = c.get('/events/{}/'.format(event.pk))
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_add_event_success(self):
+        self.assertEqual(0, Event.objects.all().count())
+
+        c = RequestClient()
+        c.force_login(self.client.user)
+        response = c.post('/add-event/', {
+            'title': 'event',
+            'date_from': '2018-05-27 12:00:00',
+            'date_to': '2018-05-27 13:00:00'
+        })
+
+        self.assertRedirects(response, '/events/')
+        self.assertEqual(1, Event.objects.all().count())
+
+    def test_add_event_no_dates(self):
+        self.assertEqual(0, Event.objects.all().count())
+
+        c = RequestClient()
+        c.force_login(self.client.user)
+        response = c.post('/add-event/', {
+            'title': 'event',
+            'date_from': '',
+            'date_to': ''
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(0, Event.objects.all().count())
+
+    def test_add_event_no_title(self):
+        self.assertEqual(0, Event.objects.all().count())
+
+        c = RequestClient()
+        c.force_login(self.client.user)
+        response = c.post('/add-event/', {
+            'title': '',
+            'date_from': '2018-05-27 12:00:00',
+            'date_to': '2018-05-27 13:00:00'
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(0, Event.objects.all().count())
+
+    def test_add_event_failure_as_contractor_get(self):
+        c = RequestClient()
+        c.force_login(self.contractor.user)
+        response = c.get('/add-event/')
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_add_event_failure_as_contractor_post(self):
+        self.assertEqual(0, Event.objects.all().count())
+
+        c = RequestClient()
+        c.force_login(self.contractor.user)
+        response = c.post('/add-event/', {
+            'title': 'event',
+            'date_from': '2018-05-27 12:00:00',
+            'date_to': '2018-05-27 13:00:00'
+        })
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(0, Event.objects.all().count())
