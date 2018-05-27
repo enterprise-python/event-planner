@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
+
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.urls import reverse
@@ -281,6 +282,24 @@ class EditEventView(View):
         return render(request, self.template_name, {
             'event_form': event_form
         })
+
+
+class BusinessesListView(ListView):
+    template_name = 'website/pages/businesses_list.html'
+    context_object_name = 'businesses_list'
+
+    def get_queryset(self):
+        return Business.objects.all()
+
+
+class RankingView(ListView):
+    template_name = 'website/pages/ranking.html'
+    context_object_name = 'businesses_list'
+
+    def get_queryset(self):
+        return sorted(Business.objects.all(),
+                      key=lambda b: b.get_average_rating(),
+                      reverse=True)[:10]
 
 
 class AddBusinessView(View):

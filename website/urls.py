@@ -31,6 +31,10 @@ urlpatterns = [
         template_name="website/pages/main_page.html")),
          name='main'),
 
+    path('businesses/', views.BusinessesListView.as_view(),
+         name='businesses'),
+    path('ranking/', views.RankingView.as_view(),
+         name='ranking'),
     path('add-business/', login_required(views.AddBusinessView.as_view()),
          name='add_business'),
     path('business/<int:pk>/', DetailView.as_view(
