@@ -1,6 +1,7 @@
 from django.test import Client as RequestClient, TestCase
 
 from website.models import User, Client, Contractor, Role
+from website.tests.test_models import BusinessModelUtilities
 
 
 class ClientRegistrationTests(TestCase):
@@ -119,3 +120,17 @@ class LoginTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.wsgi_request.user.is_authenticated)
+
+
+class BusinessesListTests(TestCase):
+
+    def setUp(self):
+        business_type = BusinessModelUtilities.create_business_type()
+        self.owner = BusinessModelUtilities.create_contractor()
+        for i in range(15):
+            BusinessModelUtilities.create_business('business{}'.format(i),
+                                                   business_type, self.owner)
+
+    def test_businesses_display(self):
+        response = RequestClient().get('/businesses/')
+        self.assertEqual(response.context['businesses_list'][0].name, 'business0')

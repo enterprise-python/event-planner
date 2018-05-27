@@ -26,4 +26,6 @@ urlpatterns = [
     path('main/', login_required(TemplateView.as_view(
         template_name="website/pages/main_page.html")),
          name='main'),
+    path('businesses/', views.BusinessesListView.as_view(),
+         name='businesses')
 ]

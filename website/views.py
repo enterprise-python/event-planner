@@ -4,9 +4,9 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django.views.generic import View
+from django.views.generic import View, ListView
 
-from website.models import Role
+from website.models import Role, Business
 from .forms import ClientCreationForm, UserCreationForm, ContractorCreationForm, \
     UserEditForm, ClientEditForm, ContractorEditForm
 
@@ -185,3 +185,11 @@ class ProfileEditView(View):
                           'contractor_edit_form': contractor_edit_form,
                           'change_password_form': change_password_form
                       })
+
+
+class BusinessesListView(ListView):
+    template_name = 'website/pages/businesses_list.html'
+    context_object_name = 'businesses_list'
+
+    def get_queryset(self):
+        return Business.objects.all()
