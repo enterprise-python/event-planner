@@ -1,6 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm as AuthUserCreationForm, \
-    UserChangeForm
+from django.contrib.auth.forms import UserCreationForm as AuthUserCreationForm
 from .models import User, Client, Contractor, Event, Business
 
 
@@ -59,7 +58,6 @@ class EventForm(forms.ModelForm):
             'title',
             'date_from',
             'date_to'
-
         )
 
 

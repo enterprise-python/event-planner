@@ -38,4 +38,13 @@ urlpatterns = [
          name='business'),
     path('business/<int:pk>/edit/', login_required(views.EditBusinessView.as_view()),
          name='edit_business'),
+
+    path('events/', login_required(views.EventsListView.as_view()),
+         name='events'),
+    path('add-event/', login_required(views.AddEventView.as_view()),
+         name='add_event'),
+    path('events/<int:pk>/', login_required(views.EventDetailView.as_view()),
+         name='event'),
+    path('events/<int:pk>/edit/', login_required(views.EditEventView.as_view()),
+         name='edit_event'),
 ]
