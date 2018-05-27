@@ -1,0 +1,9 @@
+{% extends 'website/pages/base.html' %}
+
+{% block content %}
+
+    {% for business in businesses_list %}
+        {{ business.name }}
+    {% endfor %}
+
+{% endblock %}

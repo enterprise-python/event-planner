@@ -59,6 +59,8 @@ class Business(models.Model):
     name = models.CharField(max_length=100)
     business_type = models.ForeignKey(BusinessType, on_delete=models.CASCADE)
     owner = models.ForeignKey(Contractor, on_delete=models.CASCADE)
+    description = models.TextField(max_length=500,
+                                   default='Business description...')
 
     class Meta:
         verbose_name = 'Business'

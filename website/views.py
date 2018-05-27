@@ -1,12 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import View
 
-from website.models import Role
+from website.models import Role, Business
 from .forms import ClientCreationForm, UserCreationForm, ContractorCreationForm, \
     UserEditForm, ClientEditForm, ContractorEditForm, BusinessForm
 
@@ -192,13 +192,67 @@ class AddBusinessView(View):
     template_name = 'website/pages/add_business.html'
 
     def get(self, request):
+        if not request.user.is_contractor():
+            raise Http404()
+
         return render(request, self.template_name, {
             'business_form': self.business_form(None)
         })
 
     def post(self, request):
-        business_form = self.business_form(request.POST,
-                                           instance=request.user.is_contractor)
+        if not request.user.is_contractor():
+            raise Http404()
+
+        business_form = self.business_form(request.POST)
+
         if business_form.is_valid():
             business = business_form.save(commit=False)
             business.owner = request.user.contractor
+            business.save()
+
+            return HttpResponseRedirect(reverse('website:main'))
+
+        return render(request, self.template_name, {
+            'business_form': business_form
+        })
+
+
+class EditBusinessView(View):
+    business_form = BusinessForm
+    template_name = 'website/pages/edit_business.html'
+
+    @staticmethod
+    def _check_business_owner(request, pk):
+        if not request.user.is_contractor():
+            raise Http404()
+
+        for business in Business.objects.filter(owner=request.user.client):
+            if business.pk == pk:
+                break
+        else:
+            raise Http404()
+
+    def get(self, request, pk):
+        self._check_business_owner(request, pk)
+
+        return render(request, self.template_name, {
+            'business_form': self.business_form(
+                instance=Business.objects.filter(pk=pk))
+        })
+
+    def post(self, request, pk):
+        self._check_business_owner(request, pk)
+
+        business_form = self.business_form(request.POST,
+                                           instance=Business.objects.filter(
+                                               pk=pk))
+        if business_form.is_valid():
+            business_form.save()
+            messages.success(request, 'Your business was successfully updated!')
+
+            return HttpResponseRedirect(reverse('website:main'))
+
+        messages.error(request, 'Please correct the error below.')
+        return render(request, self.template_name, {
+            'business_form': business_form
+        })
