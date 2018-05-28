@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
+from django.db.models import Avg
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -238,7 +239,8 @@ class EditEventView(View):
     event_form = EventForm
     template_name = 'website/pages/edit_event.html'
 
-    def _check_event_owner(self, user, pk):
+    @staticmethod
+    def _check_event_owner(user, pk):
         if not (user.is_client()
                 and Event.objects.get(pk=pk) in user.client.event_set):
             raise Http404()
@@ -278,9 +280,8 @@ class RankingView(ListView):
     context_object_name = 'businesses_list'
 
     def get_queryset(self):
-        return sorted(Business.objects.all(),
-                      key=lambda b: b.get_average_rating(),
-                      reverse=True)[:10]
+        return Business.objects.all().annotate(
+            avg_rating=Avg('opinion__rating')).order_by('-avg_rating')[:10]
 
 
 class AddBusinessView(View):
@@ -317,7 +318,8 @@ class EditBusinessView(View):
     business_form = BusinessForm
     template_name = 'website/pages/edit_business.html'
 
-    def _check_business_owner(self, user, pk):
+    @staticmethod
+    def _check_business_owner(user, pk):
         if not (user.is_contractor()
                 and Business.objects.get(pk=pk)
                 in user.contractor.business_set):
