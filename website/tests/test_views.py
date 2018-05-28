@@ -238,7 +238,7 @@ class EventTests(TestCase):
 
         rc = RequestClient()
         rc.force_login(self.client.user)
-        response = rc.get('/events/{}/'.format(event.pk))
+        response = rc.get('/event/{}/'.format(event.pk))
 
         self.assertEqual(response.status_code, 200)
 
@@ -257,7 +257,7 @@ class EventTests(TestCase):
 
         rc = RequestClient()
         rc.force_login(another_client.user)
-        response = rc.get('/events/{}/'.format(event.pk))
+        response = rc.get('/event/{}/'.format(event.pk))
 
         self.assertEqual(response.status_code, 404)
 
@@ -271,7 +271,7 @@ class EventTests(TestCase):
 
         rc = RequestClient()
         rc.force_login(self.contractor.user)
-        response = rc.get('/events/{}/'.format(event.pk))
+        response = rc.get('/event/{}/'.format(event.pk))
 
         self.assertEqual(response.status_code, 404)
 
