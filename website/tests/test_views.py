@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib.messages import get_messages
 from django.test import Client as RequestClient, TestCase
 from django.utils import timezone
 
@@ -374,9 +375,9 @@ class OpinionTests(TestCase):
         })
         self.assertEqual(Opinion.objects.all().count(), 0)
         self.assertRedirects(response, '/business/1/')
-        # self.assertEqual(
-        #     response.context['messages'][0],
-        #     'This business did not handle any of your events.')
+        self.assertEqual(
+            list(get_messages(response.wsgi_request))[0].message,
+            'This business did not handle any of your events.')
 
     def test_add_opinion_successfully(self):
         self.assertEqual(Opinion.objects.all().count(), 0)
@@ -394,9 +395,9 @@ class OpinionTests(TestCase):
         })
         self.assertEqual(Opinion.objects.all().count(), 1)
         self.assertRedirects(response, '/business/1/')
-        # self.assertEqual(
-        #     response.context['messages'][0],
-        #     'Your opinion was successfully added!')
+        self.assertEqual(
+            list(get_messages(response.wsgi_request))[0].message,
+            'Your opinion was successfully added!')
 
     def test_add_opinion_to_non_existing_business(self):
         rc = RequestClient()
@@ -421,9 +422,9 @@ class OpinionTests(TestCase):
 
         self.assertEqual(Opinion.objects.all().count(), 0)
         self.assertRedirects(response, '/business/1/')
-        # self.assertEqual(
-        #     response.context['messages'][0],
-        #     'This business did not handle any of your events.')
+        self.assertEqual(
+            list(get_messages(response.wsgi_request))[0].message,
+            'This business did not handle any of your events.')
 
     def test_add_opinion_twice(self):
         self.assertEqual(Opinion.objects.all().count(), 0)
@@ -448,6 +449,9 @@ class OpinionTests(TestCase):
 
         self.assertEqual(Opinion.objects.all().count(), 1)
         self.assertRedirects(response, '/business/1/')
-        # self.assertEqual(
-        #     response.context['messages'][0],
-        #     'Cannot add more opinions on this business.')
+        self.assertEqual(
+            list(get_messages(response.wsgi_request))[0].message,
+            'Your opinion was successfully added!')
+        self.assertEqual(
+            list(get_messages(response.wsgi_request))[1].message,
+            'Cannot add more opinions on this business.')
