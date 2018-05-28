@@ -1,0 +1,28 @@
+{% extends 'website/pages/base.html' %}
+
+{% load staticfiles %}
+
+{% block content %}
+
+<form class="form" method="post" action="">
+    {% csrf_token %}
+    <div class="header header-primary text-center">
+        <div class="logo-container">
+            Event Planner Logo
+        </div>
+    </div>
+    <div class="content">
+        <h2>Add opinion for <a href="{% url 'website:business' business.pk %}">{{ business.name }}</a></h2>
+
+        {% for field in add_opinion_form %}
+            <div class="form-group form-group-no-border input-lg">
+                {{ field }}
+            </div>
+        {% endfor %}
+    </div>
+    <div class="footer text-center">
+        <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Add Opinion!</button>
+    </div>
+</form>
+
+{% endblock %}

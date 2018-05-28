@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm as AuthUserCreationForm
 
-from .models import Business, Client, Contractor, Event, User
+from .models import Business, Client, Contractor, Event, Opinion, User
 
 
 class UserCreationForm(AuthUserCreationForm):
@@ -77,4 +77,14 @@ class BusinessForm(forms.ModelForm):
             'name',
             'business_type',
             'description'
+        )
+
+
+class CreateOpinionForm(forms.ModelForm):
+
+    class Meta:
+        model = Opinion
+        fields = (
+            'text',
+            'rating'
         )

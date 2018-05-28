@@ -3,14 +3,15 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.db.models import Avg
 from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.utils import timezone
 from django.views.generic import DetailView, ListView, View
 
+from website.models import Business, Event, Role
 from .forms import (BusinessForm, ClientCreationForm, ClientEditForm,
                     ContractorCreationForm, ContractorEditForm, EventForm,
-                    UserCreationForm, UserEditForm)
-from website.models import Role, Business, Event
+                    UserCreationForm, UserEditForm, CreateOpinionForm)
 
 
 class ClientRegistrationView(View):
@@ -347,4 +348,66 @@ class EditBusinessView(View):
         messages.error(request, 'Please correct the error below.')
         return render(request, self.template_name, {
             'business_form': business_form
+        })
+
+
+class AddOpinionView(View):
+    form = CreateOpinionForm
+    template_name = 'website/pages/add_opinion.html'
+
+    def get(self, request, pk):
+        if not request.user.is_client():
+            raise Http404()
+
+        business = get_object_or_404(Business, pk=pk)
+
+        return render(request, self.template_name, {
+            'add_opinion_form': self.form(None),
+            'business': business
+        })
+
+    def post(self, request, pk):
+        if not request.user.is_client():
+            raise Http404
+
+        business = get_object_or_404(Business, pk=pk)
+
+        # Past events created by the client
+        events = business.event_set.filter(
+            owner__user=request.user).filter(
+            date_to__lt=timezone.now())
+
+        created_opinions_count = business.opinion_set.filter(
+            business__event__owner__user=request.user
+        ).count()
+
+        if events.count() <= created_opinions_count:
+            messages.error(request, 'Cannot add more opinions on this business.')
+            return HttpResponseRedirect(
+                reverse('website:business', kwargs={'pk': pk}))
+
+        form = self.form(request.POST)
+        if form.is_valid():
+            opinion = form.save(commit=False)
+            opinion.business = business
+            opinion.save()
+
+            return HttpResponseRedirect(
+                reverse('website:business', kwargs={'pk': pk}))
+
+        return render(request, self.template_name, {
+            'form': form,
+            'business': business
+        })
+
+
+class OpinionsListView(View):
+    template_name = 'website/pages/opinions_list.html'
+
+    def get(self, request, pk):
+        business = get_object_or_404(Business, pk=pk)
+        opinions = business.opinion_set.all()
+        return render(request, self.template_name, {
+            'business': business,
+            'opinions': opinions
         })
