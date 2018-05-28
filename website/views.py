@@ -220,7 +220,7 @@ class AddEventView(View):
 
     def post(self, request):
         if not request.user.is_client():
-            raise Http404
+            raise Http404()
 
         event_form = self.event_form(request.POST)
 
