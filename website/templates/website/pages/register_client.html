@@ -12,25 +12,16 @@
                 <div class="card card-login card-plain">
                     <form class="form" method="post" action="">
                         {% csrf_token %}
-                        <div class="header header-primary text-center">
-                            <div class="logo-container">
-                                Event Planner Logo
-                            </div>
+                        <div class="header text-center">
+                            Register form
                         </div>
                         <div class="content">
-                            {% for form_field in user_form %}
-                                <div class="form-group form-group-no-border input-lg">
-                                    <input type="{{ form_field.field.widget.input_type }}" name="{{ form_field.name }}"
-                                           class="form-control" placeholder="{{ form_field.label }}...">
-                                </div>
-                            {% endfor %}
-                            {% for form_field in client_form %}
-                                <div class="form-group form-group-no-border input-lg">
-                                    <input type="{{ form_field.field.widget.input_type }}" name="{{ form_field.name }}"
-                                           class="form-control"
-                                           placeholder="{{ form_field.label }}...">
-                                </div>
-                            {% endfor %}
+                            {% include 'website/page_elements/user_form.html' %}
+                            {% if request.user.is_client %}
+                                {% include 'website/page_elements/client_form.html' %}
+                            {% else %}
+                                {% include 'website/page_elements/contractor_form.html' %}
+                            {% endif %}
                         </div>
                         <div class="footer text-center">
                             <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Register!</button>
@@ -41,3 +32,7 @@
         </div>
     </div>
 {% endblock content %}
+
+{% block js %}
+    $('[data-toggle="tooltip"]').tooltip();
+{% endblock js %}

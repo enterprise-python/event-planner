@@ -1,0 +1,9 @@
+{% for form_field in contractor_form %}
+    {% include 'website/page_elements/form_errors.html' %}
+    <div class="form-group form-group-no-border {% if not form_field.errors and not empty %}has-success{% endif %}">
+        <input type="{{ form_field.field.widget.input_type }}" name="{{ form_field.name }}"
+               class="form-control" data-toggle="tooltip" data-placement="right"
+               title="{{ form_field.help_text|safe|linebreaksbr|striptags }}"
+               placeholder="{{ form_field.label }}..."/>
+    </div>
+{% endfor %}
