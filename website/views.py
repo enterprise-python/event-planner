@@ -373,15 +373,20 @@ class AddOpinionView(View):
         business = get_object_or_404(Business, pk=pk)
 
         # Past events created by the client
-        events = business.event_set.filter(
+        events_count = business.event_set.filter(
             owner__user=request.user).filter(
-            date_to__lt=timezone.now())
+            date_to__lt=timezone.now()).count()
+
+        if events_count == 0:
+            messages.error(request, 'This business did not handle any of your events.')
+            return HttpResponseRedirect(
+                reverse('website:business', kwargs={'pk': pk}))
 
         created_opinions_count = business.opinion_set.filter(
             business__event__owner__user=request.user
         ).count()
 
-        if events.count() <= created_opinions_count:
+        if events_count <= created_opinions_count:
             messages.error(request, 'Cannot add more opinions on this business.')
             return HttpResponseRedirect(
                 reverse('website:business', kwargs={'pk': pk}))
@@ -392,6 +397,7 @@ class AddOpinionView(View):
             opinion.business = business
             opinion.save()
 
+            messages.success(request, 'Your opinion was successfully added!')
             return HttpResponseRedirect(
                 reverse('website:business', kwargs={'pk': pk}))
 

@@ -3,10 +3,10 @@ import datetime
 from django.test import Client as RequestClient, TestCase
 from django.utils import timezone
 
-from website.models import Client, Contractor, Event, Role, User
+from website.models import Client, Contractor, Event, Role, User, Opinion
 from website.tests.test_models import (create_business, create_business_type,
                                        create_client, create_contractor,
-                                       create_event)
+                                       create_event, create_opinion)
 
 
 class ClientRegistrationTests(TestCase):
@@ -337,3 +337,117 @@ class EventTests(TestCase):
 
         self.assertEqual(response.status_code, 404)
         self.assertEqual(Event.objects.all().count(), 0)
+
+
+class OpinionTests(TestCase):
+
+    def setUp(self):
+        self.client = create_client()
+        self.contractor = create_contractor()
+        business_type = create_business_type()
+        self.business = create_business(
+            'some_business', business_type, self.contractor)
+
+    def test_add_opinion_as_not_client(self):
+        rc = RequestClient()
+        rc.force_login(self.contractor.user)
+        response = rc.get('/business/1/add-opinion/')
+        self.assertEqual(response.status_code, 404)
+        response = rc.post('/business/1/add-opinion/')
+        self.assertEqual(response.status_code, 404)
+
+    def test_read_opinion_as_not_client(self):
+        response = RequestClient().get('/business/1/opinions/')
+        self.assertContains(response, 'No opinions')
+
+        opinion_txt = 'Example opinion content'
+        create_opinion(3, self.business, opinion_txt)
+        response = RequestClient().get('/business/1/opinions/')
+        self.assertContains(response, opinion_txt)
+
+    def test_add_opinion_without_event(self):
+        rc = RequestClient()
+        rc.force_login(self.client.user)
+        response = rc.post('/business/1/add-opinion/', {
+            'text': 'some_text',
+            'rating': '1'
+        })
+        self.assertEqual(Opinion.objects.all().count(), 0)
+        self.assertRedirects(response, '/business/1/')
+        # self.assertEqual(
+        #     response.context['messages'][0],
+        #     'This business did not handle any of your events.')
+
+    def test_add_opinion_successfully(self):
+        self.assertEqual(Opinion.objects.all().count(), 0)
+        rc = RequestClient()
+        rc.force_login(self.client.user)
+
+        date_from = timezone.now() - datetime.timedelta(days=2)
+        date_to = timezone.now() - datetime.timedelta(days=1)
+
+        create_event(date_from, date_to, self.client, business=self.business)
+
+        response = rc.post('/business/1/add-opinion/', {
+            'text': 'some_text',
+            'rating': '1'
+        })
+        self.assertEqual(Opinion.objects.all().count(), 1)
+        self.assertRedirects(response, '/business/1/')
+        # self.assertEqual(
+        #     response.context['messages'][0],
+        #     'Your opinion was successfully added!')
+
+    def test_add_opinion_to_non_existing_business(self):
+        rc = RequestClient()
+        rc.force_login(self.client.user)
+        response = rc.post('/business/2/add-opinion/')
+        self.assertEqual(response.status_code, 404)
+
+    def test_add_opinion_to_future_event(self):
+        self.assertEqual(Opinion.objects.all().count(), 0)
+        rc = RequestClient()
+        rc.force_login(self.client.user)
+
+        date_from = timezone.now() + datetime.timedelta(days=1)
+        date_to = timezone.now() + datetime.timedelta(days=2)
+
+        create_event(date_from, date_to, self.client, business=self.business)
+
+        response = rc.post('/business/1/add-opinion/', {
+            'text': 'some_text',
+            'rating': '1'
+        })
+
+        self.assertEqual(Opinion.objects.all().count(), 0)
+        self.assertRedirects(response, '/business/1/')
+        # self.assertEqual(
+        #     response.context['messages'][0],
+        #     'This business did not handle any of your events.')
+
+    def test_add_opinion_twice(self):
+        self.assertEqual(Opinion.objects.all().count(), 0)
+        rc = RequestClient()
+        rc.force_login(self.client.user)
+
+        date_from = timezone.now() - datetime.timedelta(days=2)
+        date_to = timezone.now() - datetime.timedelta(days=1)
+
+        create_event(date_from, date_to, self.client, business=self.business)
+
+        rc.post('/business/1/add-opinion/', {
+            'text': 'some_text',
+            'rating': '1'
+        })
+        self.assertEqual(Opinion.objects.all().count(), 1)
+
+        response = rc.post('/business/1/add-opinion/', {
+            'text': 'some_text',
+            'rating': '1'
+        })
+
+        self.assertEqual(Opinion.objects.all().count(), 1)
+        self.assertRedirects(response, '/business/1/')
+        # self.assertEqual(
+        #     response.context['messages'][0],
+        #     'Cannot add more opinions on this business.')
