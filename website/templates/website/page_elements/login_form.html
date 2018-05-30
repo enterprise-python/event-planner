@@ -1,0 +1,11 @@
+<div class="content">
+    {% for form_field in form %}
+        {% include 'website/page_elements/form_errors.html' %}
+        <div class="form-group form-group-no-border input-lg">
+            <input type="{{ form_field.field.widget.input_type }}" name="{{ form_field.name }}"
+                   class="form-control"
+                   value="{% if form_field.value %}{{ form_field.value }}{% endif %}"
+                   placeholder="{{ form_field.label }}...">
+        </div>
+    {% endfor %}
+</div>

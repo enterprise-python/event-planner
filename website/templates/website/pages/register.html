@@ -5,19 +5,25 @@
 {% block content %}
     <div class="page-header" filter-color="orange">
         <div class="page-header-image"
-             style="background-image:url({% static 'website/img/bg_client_registration.jpg' %})"></div>
+             style="background-image:
+                     {% if client_form %}
+                        url( {% static 'website/img/bg_client_registration.jpg' %});
+                     {% else %}
+                        url( {% static 'website/img/bg_register.jpg' %});
+                     {% endif %})">
+        </div>
 
         <div class="container col-md-5">
             <div class="content-center">
                 <div class="card card-login card-plain">
                     <form class="form" method="post" action="">
                         {% csrf_token %}
-                        <div class="header text-center">
+                        <div class="header text-center white-text">
                             Register form
                         </div>
                         <div class="content">
                             {% include 'website/page_elements/user_form.html' %}
-                            {% if request.user.is_client %}
+                            {% if client_form %}
                                 {% include 'website/page_elements/client_form.html' %}
                             {% else %}
                                 {% include 'website/page_elements/contractor_form.html' %}

@@ -15,7 +15,7 @@ from .forms import ClientCreationForm, UserCreationForm, ContractorCreationForm,
 class ClientRegistrationView(View):
     user_form = UserCreationForm
     client_form = ClientCreationForm
-    template_name = 'website/pages/register_client.html'
+    template_name = 'website/pages/register.html'
 
     def get(self, request):
         user_form = self.user_form(None)
@@ -50,7 +50,7 @@ class ClientRegistrationView(View):
 class ContractorRegistrationView(View):
     user_form = UserCreationForm
     contractor_form = ContractorCreationForm
-    template_name = 'website/pages/register_contractor.html'
+    template_name = 'website/pages/register.html'
 
     def get(self, request):
         user_form = self.user_form(None)
