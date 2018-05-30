@@ -2,6 +2,7 @@ from enum import Enum
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import Avg
 
 
 class Role(Enum):
@@ -70,9 +71,8 @@ class Business(models.Model):
         return self.name
 
     def get_average_rating(self):
-        opinions = self.opinion_set.all()
-        if opinions:
-            return sum(opinion.rating for opinion in opinions) / len(opinions)
+        return self.opinion_set.all().aggregate(
+            avg_rating=Avg('rating'))['avg_rating']
 
     get_average_rating.short_description = 'average rating'
     get_average_rating.empty_value_display = 'no opinions'

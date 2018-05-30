@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if opinions %}
+    <h2>Opinions for <a href="{% url 'website:business' business.pk %}">{{ business.name }}</a></h2>
+
+    {% for opinion in opinions %}
+        <h1>Text: {{ opinion.text }}</h1>
+        <p>Rating: {{ opinion.rating }}</p>
+    {% endfor %}
+{% else %}
+    <p>No opinions!</p>
+{% endif %}
+</body>
+</html>
