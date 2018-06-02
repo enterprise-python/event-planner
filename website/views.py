@@ -417,3 +417,18 @@ class OpinionsListView(View):
             'business': business,
             'opinions': opinions
         })
+
+
+class MainPageView(View):
+    template_name = 'website/pages/main_page.html'
+
+    def get(self, request):
+        if request.user.is_contractor():
+            return self._get_contractor_main(request)
+        return render(request, self.template_name)
+
+    def _get_contractor_main(self, request):
+        businesses = Business.objects.filter(owner=self.request.user.contractor)
+        return render(request, self.template_name, {
+            'businesses': businesses
+        })
