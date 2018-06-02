@@ -1,10 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'website/pages/base.html' %}
 
-</body>
-</html>
+{% load staticfiles %}
+
+{% block content %}
+    <div class="page-header" filter-color="orange">
+        <div class="page-header-image"
+             style="background-image:url( {% static 'website/img/bg_add_event.jpg' %});">
+        </div>
+
+        <div class="container col-md-10">
+            <div class="content">
+                <div class="card card-login card-plain">
+                    <form class="form" method="post" action="">
+                        {% csrf_token %}
+                        <div class="header text-center white-text">
+                            Create event!
+                        </div>
+                        <div class="content">
+                            {% include 'website/page_elements/event_form.html' %}
+                        </div>
+                        <div class="footer text-center">
+                            <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Continue</button>
+                        </div>
+                        <table class="table table-hover bg-default">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col" colspan="2">Business type</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for business in businesses_list %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ business.name }}</td>
+                                    <td>{{ business.business_type }}</td>
+                                    <td><i class="ui-1_simple-add"></i></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+{% endblock js %}
