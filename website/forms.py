@@ -1,9 +1,11 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm as AuthUserCreationForm
-from .models import User, Client, Contractor, Event, Business
+
+from .models import Business, Client, Contractor, Event, Opinion, User
 
 
 class UserCreationForm(AuthUserCreationForm):
+
     class Meta:
         model = User
         fields = (
@@ -17,18 +19,21 @@ class UserCreationForm(AuthUserCreationForm):
 
 
 class ClientCreationForm(forms.ModelForm):
+
     class Meta:
         model = Client
         fields = ()
 
 
 class ContractorCreationForm(forms.ModelForm):
+
     class Meta:
         model = Contractor
         fields = ()
 
 
 class UserEditForm(forms.ModelForm):
+
     class Meta:
         model = User
         fields = (
@@ -40,18 +45,21 @@ class UserEditForm(forms.ModelForm):
 
 
 class ClientEditForm(forms.ModelForm):
+
     class Meta:
         model = Client
         fields = ()
 
 
 class ContractorEditForm(forms.ModelForm):
+
     class Meta:
         model = Contractor
         fields = ()
 
 
 class EventForm(forms.ModelForm):
+
     class Meta:
         model = Event
         fields = (
@@ -62,10 +70,21 @@ class EventForm(forms.ModelForm):
 
 
 class BusinessForm(forms.ModelForm):
+
     class Meta:
         model = Business
         fields = (
             'name',
             'business_type',
             'description'
+        )
+
+
+class CreateOpinionForm(forms.ModelForm):
+
+    class Meta:
+        model = Opinion
+        fields = (
+            'text',
+            'rating'
         )
