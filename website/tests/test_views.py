@@ -4,7 +4,8 @@ from django.contrib.messages import get_messages
 from django.test import Client as RequestClient, TestCase
 from django.utils import timezone
 
-from website.models import Client, Contractor, Event, Role, User, Opinion
+from website.models import Client, Contractor, Event, Role, User, Opinion, \
+    Business
 from website.tests.test_models import (create_business, create_business_type,
                                        create_client, create_contractor,
                                        create_event, create_opinion)
@@ -455,3 +456,22 @@ class OpinionTests(TestCase):
         self.assertEqual(
             list(get_messages(response.wsgi_request))[1].message,
             'Cannot add more opinions on this business.')
+
+
+class MainPageTests(TestCase):
+
+    def setUp(self):
+        self.contractor = create_contractor()
+        business_type = create_business_type()
+        self.business1 = create_business(
+            'some_business1', business_type, self.contractor)
+        self.business2 = create_business(
+            'some_business2', business_type, self.contractor
+        )
+
+    def test_contractor_businesses(self):
+        rc = RequestClient()
+        rc.force_login(self.contractor.user)
+        response = rc.get('/main/')
+        self.assertEqual(list(Business.objects.all()),
+                         list(response.context['businesses']))
