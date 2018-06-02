@@ -1,0 +1,44 @@
+{% extends 'website/pages/base.html' %}
+
+{% load staticfiles %}
+
+{% block content %}
+    <div class="page-header" filter-color="orange">
+        <div class="page-header-image "
+             style="background-image:
+                     {% if client_form %}
+                        url( {% static 'website/img/bg_client_registration.jpg' %});
+                     {% else %}
+                        url( {% static 'website/img/bg_register.jpg' %});
+                     {% endif %})">
+        </div>
+
+        <div class="container col-md-5">
+            <div class="content">
+                <div class="card card-login card-plain mt-5">
+                    <form class="form" method="post" action="">
+                        {% csrf_token %}
+                        <div class="header text-center white-text">
+                            Register form
+                        </div>
+                        <div class="content">
+                            {% include 'website/page_elements/user_form.html' %}
+                            {% if client_form %}
+                                {% include 'website/page_elements/client_form.html' %}
+                            {% else %}
+                                {% include 'website/page_elements/contractor_form.html' %}
+                            {% endif %}
+                        </div>
+                        <div class="footer text-center">
+                            <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Register!</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+    $('[data-toggle="tooltip"]').tooltip();
+{% endblock js %}
