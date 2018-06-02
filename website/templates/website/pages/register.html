@@ -10,7 +10,7 @@
                         url( {% static 'website/img/bg_client_registration.jpg' %});
                      {% else %}
                         url( {% static 'website/img/bg_register.jpg' %});
-                     {% endif %})">
+                     {% endif %}">
         </div>
 
         <div class="container col-md-5">
@@ -40,5 +40,7 @@
 {% endblock content %}
 
 {% block js %}
+    <script type="application/javascript">
     $('[data-toggle="tooltip"]').tooltip();
+    </script>
 {% endblock js %}

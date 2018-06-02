@@ -224,7 +224,8 @@ class AddEventView(View):
             raise Http404()
 
         return render(request, self.template_name, {
-            'event_form': self.event_form(None)
+            'event_form': self.event_form(None),
+            'businesses_list': Business.objects.all()
         })
 
     def post(self, request):
