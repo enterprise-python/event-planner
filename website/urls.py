@@ -35,8 +35,7 @@ urlpatterns = [
          login_required(views.ProfileEditView.as_view()),
          name='edit'),
     path('main/',
-         login_required(TemplateView.as_view(
-             template_name="website/pages/main_page.html")),
+         login_required(views.MainPageView.as_view()),
          name='main'),
 
     path('add-business/',
