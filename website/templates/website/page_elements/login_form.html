@@ -1,9 +1,22 @@
-<div class="content">
+<div class="content-center">
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                {{ error|safe }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">
+                    <i class="now-ui-icons ui-1_simple-remove"></i>
+                </span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
     {% for form_field in form %}
         {% include 'website/page_elements/form_errors.html' %}
         <div class="form-group form-group-no-border input-lg">
             <input type="{{ form_field.field.widget.input_type }}" name="{{ form_field.name }}"
-                   class="form-control"
+                   class="form-control" data-toggle="tooltip" data-placement="right"
+                   title="{{ form_field.help_text }}"
                    value="{% if form_field.value %}{{ form_field.value }}{% endif %}"
                    placeholder="{{ form_field.label }}...">
         </div>
