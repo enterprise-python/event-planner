@@ -1,0 +1,48 @@
+<div class="form-group form-group-no-border input-lg">
+    <input type="text" name="title" class="form-control" value="" placeholder="Title...">
+</div>
+
+<div class="form-group form-group-no-border input-lg col-md-5">
+    <input class="form-control input-append date form_datetime" size="16" type="text"
+            {% with date_from=event_form.date_from %}
+           placeholder="{{ date_from.label }}..."
+           value="{% if date_from.value %}{{ date_from.value }}{% endif %}"
+           name="{{ date_from.name }}">
+            {% endwith %}
+    <span class=" add-on"><i class="icon-th"></i></span>
+</div>
+
+<div class="form-group form-group-no-border input-lg col-md-5">
+    <input class="form-control input-append date form_datetime" size="16" type="text"
+            {% with date_to=event_form.date_to %}
+           placeholder="{{ date_to.label }}..."
+           value="{% if date_to.value %}{{ date_to.value }}{% endif %}"
+           name="{{ date_to.name }}">
+            {% endwith %}
+    <span class=" add-on"><i class="icon-th"></i></span>
+</div>
+
+
+<div class="content col-md-9">
+    <table class="table table-hover table-sm">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Business name</th>
+            <th scope="col">Business type</th>
+            <th scope="col" colspan="2">Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for business in businesses_list %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ business.name }}</td>
+                <td>{{ business.business_type }}</td>
+                <td>{{ business.description|truncatewords:5 }}</td>
+                <td><i class="material-icons">add_circle_outline</i></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
