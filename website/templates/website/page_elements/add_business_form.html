@@ -15,11 +15,10 @@
     {% include 'website/page_elements/form_errors.html' %}
     <select class="form-control bg-primary white-text" id="type_select"
             name="{{ form_field.name }}">
-        {% for type in businesses_types %}
-            <option value="{{ forloop.counter }}">{{ type }}</option>
+        {% for type in form_field %}
+            {{ type }}
         {% endfor %}
     </select>
-{#    {{ form_field }}#}
 {% endwith %}
 
 {% with form_field=business_form.description %}
