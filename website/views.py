@@ -215,8 +215,7 @@ class AddEventView(View):
             raise Http404()
 
         return render(request, self.template_name, {
-            'event_form': self.event_form(None),
-            'businesses_list': Business.objects.all()
+            'event_form': self.event_form(None)
         })
 
     def post(self, request):
@@ -234,8 +233,7 @@ class AddEventView(View):
             return HttpResponseRedirect(reverse('website:events'))
 
         return render(request, self.template_name, {
-            'event_form': event_form,
-            'businesses_list': Business.objects.all()
+            'event_form': event_form
         })
 
 
