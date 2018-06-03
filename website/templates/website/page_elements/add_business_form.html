@@ -1,0 +1,32 @@
+{% with form_field=business_form.name %}
+    {% include 'website/page_elements/form_errors.html' %}
+    <div class="form-group form-group-no-border input-lg">
+        <input type="{{ form_field.field.widget.input_type }}"
+               name="{{ form_field.name }}"
+               class="form-control" id="name_input" data-toggle="tooltip" data-placement="right"
+               title="{{ form_field.help_text|safe|linebreaksbr|striptags }}"
+               value="{% if form_field.value %}{{ form_field.value }}{% endif %}"
+               placeholder="{{ form_field.label }}..."/>
+    </div>
+{% endwith %}
+
+{% with form_field=business_form.business_type %}
+    <label for="type_select">Category:</label>
+    {% include 'website/page_elements/form_errors.html' %}
+    <select class="form-control bg-primary white-text" id="type_select"
+            name="{{ form_field.name }}">
+        {% for type in businesses_types %}
+            <option value="{{ forloop.counter }}">{{ type }}</option>
+        {% endfor %}
+    </select>
+{#    {{ form_field }}#}
+{% endwith %}
+
+{% with form_field=business_form.description %}
+    {% include 'website/page_elements/form_errors.html' %}
+    <textarea class="form-control"
+              name="{{ form_field.name }}"
+              placeholder="Here you can provide a description of your business..." rows="10"
+              style="margin-top: 5%"
+              id="edit-form"></textarea>
+{% endwith %}
