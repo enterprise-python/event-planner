@@ -302,3 +302,7 @@ img {
 .white-text {
     color: white;
 }
+
+#add_business {
+    background: #4f555e;
+}
