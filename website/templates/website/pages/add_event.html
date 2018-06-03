@@ -3,7 +3,7 @@
 {% load staticfiles %}
 
 {% block content %}
-    <div class="page-header" filter-color="orange">
+    <div class="page-header" id="edit-page-header" style="pointer-events: auto">
         <div class="page-header-image"
              style="background-image:url( {% static 'website/img/bg_add_event.jpg' %});">
         </div>
@@ -38,5 +38,14 @@
     minuteStep: 15,
     startDate: "{% now "Y-m-d H:m" %}",
     pickerPosition: "bottom-left"
+    });
+
+    $(document).ready(function(){
+    $("#businessSearch").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#businessTable tr").filter(function() {
+    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+    });
     });
 {% endblock js %}

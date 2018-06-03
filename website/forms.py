@@ -65,7 +65,8 @@ class EventForm(forms.ModelForm):
         fields = (
             'title',
             'date_from',
-            'date_to'
+            'date_to',
+            'businesses'
         )
 
 
@@ -75,6 +76,7 @@ class BusinessForm(forms.ModelForm):
         model = Business
         fields = (
             'name',
+            'owner',
             'business_type',
             'description'
         )

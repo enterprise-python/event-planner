@@ -229,11 +229,13 @@ class AddEventView(View):
             event = event_form.save(commit=False)
             event.owner = request.user.client
             event.save()
+            event.businesses.set(request.POST.getlist('businesses'))
 
             return HttpResponseRedirect(reverse('website:events'))
 
         return render(request, self.template_name, {
-            'event_form': event_form
+            'event_form': event_form,
+            'businesses_list': Business.objects.all()
         })
 
 
