@@ -228,6 +228,7 @@ class AddEventView(View):
             event = event_form.save(commit=False)
             event.owner = request.user.client
             event.save()
+            event.businesses.set(request.POST.getlist('businesses'))
 
             return HttpResponseRedirect(reverse('website:events'))
 

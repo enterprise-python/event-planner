@@ -7,7 +7,7 @@
     <div class="container">
         <h1 id="bottom" class="title">Event Planner</h1>
         {% if request.user.is_client %}
-        <a href="#events" class="btn btn-primary btn-round">Create an Event!</a>
+            <a href="{% url 'website:add_event' %}" class="btn btn-primary btn-round">Create an Event!</a>
         {% endif %}
     </div>
 </div>
@@ -28,7 +28,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="image-container image-center" style="background-image:
-                    url({% static 'website/img/jens-johnsson-121807-unsplash.jpg' %})">
+                            url({% static 'website/img/bg_add_event.jpg' %})">
                     </div>
                 </div>
                 <div class="col-md-4">

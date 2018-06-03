@@ -1,10 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'website/pages/base.html' %}
 
-</body>
-</html>
+{% load staticfiles %}
+
+{% block content %}
+    <div class="page-header" id="edit-page-header" style="pointer-events: auto">
+        <div class="page-header-image"
+             style="background-image:url( {% static 'website/img/bg_add_event.jpg' %});">
+        </div>
+
+        <div class="container col-md-9">
+            <div class="content">
+                <div class="card card-login card-plain mt-5">
+                    <form class="form" method="post" action="">
+                        {% csrf_token %}
+                        <div class="header text-center white-text">
+                            Create event!
+                        </div>
+                        <div class="content">
+                            {% include 'website/page_elements/event_form.html' %}
+                        </div>
+                        <div class="footer text-center">
+                            <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Continue</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+    $('.form_datetime').datetimepicker({
+    weekStart: 1,
+    todayBtn:  1,
+    autoclose: 1,
+    todayHighlight: 1,
+    minuteStep: 15,
+    startDate: "{% now "Y-m-d H:m" %}",
+    pickerPosition: "bottom-left"
+    });
+
+    $(document).ready(function(){
+    $("#businessSearch").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#businessSelect option").filter(function() {
+    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+    });
+    });
+{% endblock js %}
