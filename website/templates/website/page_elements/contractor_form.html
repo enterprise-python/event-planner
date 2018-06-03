@@ -1,0 +1,10 @@
+{% for form_field in contractor_form %}
+    {% include 'website/page_elements/form_errors.html' %}
+    <div class="form-group form-group-no-border">
+        <input type="{{ form_field.field.widget.input_type }}" name="{{ form_field.name }}"
+               class="form-control" data-toggle="tooltip" data-placement="right"
+               title="{{ form_field.help_text|safe|linebreaksbr|striptags }}"
+               value="{% if form_field.value %}{{ form_field.value }}{% endif %}"
+               placeholder="{{ form_field.label }}..."/>
+    </div>
+{% endfor %}

@@ -3,14 +3,14 @@
 {% load staticfiles %}
 
 {% block content %}
-    <div class="page-header" filter-color="orange">
+    <div class="page-header" id="edit-page-header" style="pointer-events: auto">
         <div class="page-header-image"
              style="background-image:url( {% static 'website/img/bg_add_event.jpg' %});">
         </div>
 
-        <div class="container col-md-10">
+        <div class="container col-md-9">
             <div class="content">
-                <div class="card card-login card-plain">
+                <div class="card card-login card-plain mt-5">
                     <form class="form" method="post" action="">
                         {% csrf_token %}
                         <div class="header text-center white-text">
@@ -22,25 +22,6 @@
                         <div class="footer text-center">
                             <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Continue</button>
                         </div>
-                        <table class="table table-hover bg-default">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Name</th>
-                                <th scope="col" colspan="2">Business type</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for business in businesses_list %}
-                                <tr>
-                                    <th scope="row">{{ forloop.counter }}</th>
-                                    <td>{{ business.name }}</td>
-                                    <td>{{ business.business_type }}</td>
-                                    <td><i class="ui-1_simple-add"></i></td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
                     </form>
                 </div>
             </div>
@@ -49,4 +30,22 @@
 {% endblock content %}
 
 {% block js %}
+    $('.form_datetime').datetimepicker({
+    weekStart: 1,
+    todayBtn:  1,
+    autoclose: 1,
+    todayHighlight: 1,
+    minuteStep: 15,
+    startDate: "{% now "Y-m-d H:m" %}",
+    pickerPosition: "bottom-left"
+    });
+
+    $(document).ready(function(){
+    $("#businessSearch").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#businessSelect option").filter(function() {
+    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+    });
+    });
 {% endblock js %}

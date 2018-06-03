@@ -1,18 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-{% if events_list %}
-    {% for event in events_list %}
-        <h1>Title: {{ event.title }}</h1>
-        <p>Date from: {{ event.date_from }}</p>
-        <p>Date to: {{ event.date_to }}</p>
-    {% endfor %}
-{% else %}
-    <p>No events!</p>
-{% endif %}
-</body>
-</html>
+{% extends 'website/pages/base.html' %}
+
+{% load staticfiles %}
+{% block content %}
+    <div class="page-header" id="edit-page-header" style="pointer-events: auto">
+        <div class="page-header-image"
+             style="background-image:url( {% static 'website/img/bg_add_event.jpg' %});">
+        </div>
+
+        <div class="container col-md-10">
+            <div class="content">
+                <div class="card card-login card-plain mt-5">
+                    <div class="header text-center white-text">
+                        Your events!
+                    </div>
+                    {% if events_list %}
+                        <table class="table table-hover table-sm">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">From</th>
+                                <th scope="col">To</th>
+                                <th scope="col">Businesses</th>
+                            </tr>
+                            </thead>
+                            <tbody id="businessTable">
+                            {% for event in events_list %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ event.title }}</td>
+                                    <td>{{ event.date_from }}</td>
+                                    <td>{{ event.date_to }}</td>
+                                    <td>{% for business in event.businesses.all %}
+                                        {{ business }}<br/>
+                                    {% endfor %}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>No events!</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+

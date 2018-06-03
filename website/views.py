@@ -17,7 +17,7 @@ from .forms import (BusinessForm, ClientCreationForm, ClientEditForm,
 class ClientRegistrationView(View):
     user_form = UserCreationForm
     client_form = ClientCreationForm
-    template_name = 'website/pages/register_client.html'
+    template_name = 'website/pages/register.html'
 
     def get(self, request):
         return render(request, self.template_name, {
@@ -49,7 +49,7 @@ class ClientRegistrationView(View):
 class ContractorRegistrationView(View):
     user_form = UserCreationForm
     contractor_form = ContractorCreationForm
-    template_name = 'website/pages/register_contractor.html'
+    template_name = 'website/pages/register.html'
 
     def get(self, request):
         return render(request, self.template_name, {
@@ -228,6 +228,7 @@ class AddEventView(View):
             event = event_form.save(commit=False)
             event.owner = request.user.client
             event.save()
+            event.businesses.set(request.POST.getlist('businesses'))
 
             return HttpResponseRedirect(reverse('website:events'))
 
