@@ -20,30 +20,7 @@
     {% endwith %}
 </div>
 
-{#<div class="form-group form-group-no-border input-lg">#}
-{#    {% with form_field=event_form.businesses %}#}
-{#        {% include 'website/page_elements/form_errors.html' %}#}
-{#        <input type="{{ form_field.field.widget.input_type }}" name="{{ form_field.name }}" class="form-control"#}
-{#               value="{% if form_field.value %}{{ form_field.value }}{% endif %}"#}
-{#               placeholder="{{ form_field.label }}...">#}
-{#    {% endwith %}#}
-{#</div>#}
-
-<div class="table table-hover table-sm">
-    {% with form_field=event_form.businesses %}
-        {% include 'website/page_elements/form_errors.html' %}
-        <label for="businessSelect">Example multiple select</label>
-        {#        <select multiple class="form-control" id="businessSelect" name="{{ form_field.name }}">#}
-        {#            {% for option in form_field %}#}
-        {#                                {{ option }}#}
-        {#                <option value="{{ forloop.counter }}">{{ option|striptags }}</option>#}
-        {#            {% endfor %}#}
-        {#        </select>#}
-        {{ form_field }}
-    {% endwith %}
-</div>
-
-<div class="d-inline-block form-group form-group-no-border input-lg col-md-5">
+<div class="d-inline-block form-group form-group-no-border input-lg col-md-4">
     {% with form_field=event_form.date_from %}
         {% include 'website/page_elements/form_errors.html' %}
         <input class="form-control input-append date form_datetime" size="16"
@@ -56,7 +33,7 @@
     <span class=" add-on"><i class="icon-th"></i></span>
 </div>
 
-<div class="d-inline-block form-group form-group-no-border input-lg col-md-5">
+<div class="d-inline-block form-group form-group-no-border input-lg col-md-4">
     {% with form_field=event_form.date_to %}
         {% include 'website/page_elements/form_errors.html' %}
         <input class="form-control input-append date form_datetime" size="16"
@@ -73,28 +50,14 @@
            placeholder="Search by business name, type or owner..">
 </div>
 
-<div class="content">
-    <table class="table table-hover table-sm">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Business name</th>
-            <th scope="col">Owner</th>
-            <th scope="col">Business type</th>
-            <th scope="col" colspan="2">Description</th>
-        </tr>
-        </thead>
-        <tbody id="businessTable">
-        {% for business in businesses_list %}
-            <tr>
-                <th scope="row">{{ forloop.counter }}</th>
-                <td>{{ business.name }}</td>
-                <td>{{ business.owner }}</td>
-                <td>{{ business.business_type }}</td>
-                <td>{{ business.description|truncatewords:5 }}</td>
-                <td><i class="material-icons">add_circle_outline</i></td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<div class="form-group form-group-no-border col-md-6 mx-auto">
+    {% with form_field=event_form.businesses %}
+        {% include 'website/page_elements/form_errors.html' %}
+        <select multiple class="form-control bg-primary white-text" id="businessSelect" name="{{ form_field.name }}"
+                title="Businesses select">
+            {% for option in form_field %}
+                {{ option }}
+            {% endfor %}
+        </select>
+    {% endwith %}
 </div>

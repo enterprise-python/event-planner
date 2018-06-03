@@ -8,7 +8,7 @@
              style="background-image:url( {% static 'website/img/bg_add_event.jpg' %});">
         </div>
 
-        <div class="container col-md-10">
+        <div class="container col-md-9">
             <div class="content">
                 <div class="card card-login card-plain mt-5">
                     <form class="form" method="post" action="">
@@ -43,7 +43,7 @@
     $(document).ready(function(){
     $("#businessSearch").on("keyup", function() {
     var value = $(this).val().toLowerCase();
-    $("#businessTable tr").filter(function() {
+    $("#businessSelect option").filter(function() {
     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
     });
