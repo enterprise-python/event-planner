@@ -44,6 +44,15 @@ class UserEditForm(forms.ModelForm):
         )
 
 
+class UserEditAvatarForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = (
+            'avatar',
+        )
+
+
 class ClientEditForm(forms.ModelForm):
 
     class Meta:

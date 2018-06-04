@@ -11,7 +11,7 @@ from django.views.generic import DetailView, ListView, View
 from website.models import Business, Event, Role
 from .forms import (BusinessForm, ClientCreationForm, ClientEditForm,
                     ContractorCreationForm, ContractorEditForm, EventForm,
-                    UserCreationForm, UserEditForm, CreateOpinionForm)
+                    UserCreationForm, UserEditForm, CreateOpinionForm, UserEditAvatarForm)
 
 
 class ClientRegistrationView(View):
@@ -30,14 +30,13 @@ class ClientRegistrationView(View):
         client_form = self.client_form(request.POST)
 
         if user_form.is_valid() and client_form.is_valid():
-            user = user_form.save(commit=False)
-            user.role = Role.CLIENT.value
-            user.save()
+            user = user_form.save()
 
             client = client_form.save(commit=False)
             client.user = user
             client.save()
 
+            messages.success(request, 'Client created successfully!')
             return HttpResponseRedirect(reverse('website:login'))
 
         return render(request, self.template_name, {
@@ -62,14 +61,12 @@ class ContractorRegistrationView(View):
         contractor_form = self.contractor_form(request.POST)
 
         if user_form.is_valid() and contractor_form.is_valid():
-            user = user_form.save(commit=False)
-            user.role = Role.CONTRACTOR.value
-            user.save()
+            user = user_form.save()
 
             contractor = contractor_form.save(commit=False)
             contractor.user = user
             contractor.save()
-
+            messages.success(request, 'Contractor created successfully!')
             return HttpResponseRedirect(reverse('website:login'))
 
         return render(request, self.template_name, {
@@ -80,103 +77,83 @@ class ContractorRegistrationView(View):
 
 class ProfileEditView(View):
     user_edit_form = UserEditForm
+    edit_avatar_form = UserEditAvatarForm
     client_edit_form = ClientEditForm
     contractor_edit_form = ContractorEditForm
     password_change_form = PasswordChangeForm
     template_name = "website/pages/edit_profile.html"
 
     def get(self, request):
+        context = {
+            'user_edit_form': self.user_edit_form(instance=request.user),
+            'edit_avatar_form': self.edit_avatar_form(instance=request.user),
+            'change_password_form': self.password_change_form(request.user)
+        }
+
         if request.user.is_client():
-            return self._get_client(request)
+            context['client_edit_form'] = self.client_edit_form(
+                instance=request.user)
         elif request.user.is_contractor():
-            return self._get_contractor(request)
+            context['contractor_edit_form'] = self.contractor_edit_form(
+                instance=request.user)
 
-    def _get_client(self, request):
-        user_edit_form = self.user_edit_form(instance=request.user)
-        client_edit_form = self.client_edit_form(instance=request.user)
-        change_password_form = self.password_change_form(user=request.user)
-
-        return render(request, self.template_name, {
-            'user_edit_form': user_edit_form,
-            'client_edit_form': client_edit_form,
-            'change_password_form': change_password_form
-        })
-
-    def _get_contractor(self, request):
-        user_edit_form = self.user_edit_form(instance=request.user)
-        contractor_edit_form = self.contractor_edit_form(instance=request.user)
-        change_password_form = self.password_change_form(request.user)
-
-        return render(request, self.template_name, {
-            'user_edit_form': user_edit_form,
-            'contractor_edit_form': contractor_edit_form,
-            'change_password_form': change_password_form
-        })
+        return render(request, self.template_name, context)
 
     def post(self, request):
+        context = {
+            'user_edit_form': self.user_edit_form(request.POST,
+                                                  instance=request.user),
+            'edit_avatar_form': self.edit_avatar_form(request.POST,
+                                                      instance=request.user),
+            'change_password_form': self.password_change_form(request.user,
+                                                              request.POST)
+        }
+
+        if context['change_password_form'].is_valid():
+            user = context['change_password_form'].save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated!')
+
+            return HttpResponseRedirect(reverse('website:edit'))
+        elif context['edit_avatar_form'].is_valid():
+            context['edit_avatar_form'].save()
+            messages.success(request, 'Your avatar was successfully updated!')
+
+            return HttpResponseRedirect(reverse('website:edit'))
+
         if request.user.is_client():
-            return self._post_client(request)
+            return self._post_client(request, context)
         elif request.user.is_contractor():
-            return self._post_contractor(request)
+            return self._post_contractor(request, context)
 
-    def _post_client(self, request):
-        user_edit_form = self.user_edit_form(request.POST,
-                                             instance=request.user)
-        client_edit_form = self.client_edit_form(request.POST,
-                                                 instance=request.user)
-        change_password_form = self.password_change_form(request.user,
-                                                         request.POST)
+    def _post_client(self, request, context):
+        context['client_edit_form'] = self.client_edit_form(
+            request.POST, instance=request.user)
 
-        if user_edit_form.is_valid() and client_edit_form.is_valid():
-            user_edit_form.save()
-            client_edit_form.save()
+        if context['user_edit_form'].is_valid() and context['client_edit_form'].is_valid():
+            context['user_edit_form'].save()
+            context['client_edit_form'].save()
             messages.success(request, 'Your profile was successfully updated!')
-
-            return HttpResponseRedirect(reverse('website:edit'))
-
-        elif change_password_form.is_valid():
-            user = change_password_form.save()
-            update_session_auth_hash(request, user)
-            messages.success(request, 'Your password was successfully updated!')
 
             return HttpResponseRedirect(reverse('website:edit'))
 
         messages.error(request, 'Please correct the error below.')
 
-        return render(request, self.template_name, {
-            'user_edit_form': user_edit_form,
-            'client_edit_form': client_edit_form,
-            'change_password_form': change_password_form
-        })
+        return render(request, self.template_name, context)
 
-    def _post_contractor(self, request):
-        user_edit_form = self.user_edit_form(request.POST,
-                                             instance=request.user)
-        contractor_edit_form = self.contractor_edit_form(request.POST,
-                                                         instance=request.user)
-        change_password_form = self.password_change_form(request.user,
-                                                         request.POST)
+    def _post_contractor(self, request, context):
+        context['contractor_edit_form'] = self.contractor_edit_form(
+            request.POST, instance=request.user)
 
-        if user_edit_form.is_valid() and contractor_edit_form.is_valid():
-            user_edit_form.save()
-            contractor_edit_form.save()
+        if context['user_edit_form'].is_valid() and context['contractor_edit_form'].is_valid():
+            context['user_edit_form'].save()
+            context['contractor_edit_form'].save()
             messages.success(request, 'Your profile was successfully updated!')
 
             return HttpResponseRedirect(reverse('website:edit'))
 
-        elif change_password_form.is_valid():
-            user = change_password_form.save()
-            update_session_auth_hash(request, user)
-            messages.success(request, 'Your password was successfully updated!')
-
-            return HttpResponseRedirect(reverse('website:edit'))
-
         messages.error(request, 'Please correct the error below.')
-        return render(request, self.template_name, {
-            'user_edit_form': user_edit_form,
-            'contractor_edit_form': contractor_edit_form,
-            'change_password_form': change_password_form
-        })
+        return render(request, self.template_name, context)
 
 
 class EventsListView(ListView):

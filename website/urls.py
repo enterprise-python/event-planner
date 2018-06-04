@@ -1,8 +1,10 @@
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
+from django.conf.urls.static import static
 from django.urls import path
 from django.views.generic import DetailView, TemplateView
 
+from eventplanner import settings
 from . import views
 from website.models import Business
 
@@ -76,3 +78,6 @@ urlpatterns = [
          login_required(views.EditEventView.as_view()),
          name='edit_event'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

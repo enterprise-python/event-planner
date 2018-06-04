@@ -1,11 +1,16 @@
 from enum import Enum
+import json
 
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Avg
+from django.utils.html import format_html
 from django.utils import timezone
 import datetime
+
+WIDTH_FIELD = 225
+HEIGHT_FIELD = 225
 
 
 class Role(Enum):
@@ -18,6 +23,21 @@ class User(AbstractUser):
     email = models.EmailField('email address', blank=False, unique=True)
     role = models.PositiveSmallIntegerField(blank=False,
                                             default=Role.ADMIN.value)
+    avatar = models.ImageField('avatar', upload_to='avatars/',
+                               default='default_image.png')
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        from PIL import Image
+
+        # print("IMG: ", self.avatar.path)
+        # photo = Image.open(self.avatar.path)
+
+    #     photo.thumbnail((WIDTH_FIELD, HEIGHT_FIELD))
+    #     photo.save(self.get_t)
+
+    def image_tag(self):
+        return format_html('<img src="%s" alt="%s">')
 
     def __str__(self):
         return self.username
@@ -44,12 +64,22 @@ class Client(models.Model):
     def __str__(self):
         return 'client {}'.format(self.user.username)
 
+    def save(self, *args, **kwargs):
+        self.user.role = Role.CLIENT.value
+        self.user.save()
+        super().save(*args, **kwargs)
+
 
 class Contractor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return 'contractor {}'.format(self.user.username)
+
+    def save(self, *args, **kwargs):
+        self.user.role = Role.CONTRACTOR.value
+        self.user.save()
+        super().save(*args, **kwargs)
 
 
 class BusinessType(models.Model):
@@ -87,6 +117,12 @@ class Business(models.Model):
             event_schedule.append((event_id, event.date_from, event.date_to))
 
         return event_schedule
+
+    def get_events_json(self):
+        events = {}
+        for event_id, event in enumerate(self.event_set.all()):
+            events[event_id] = (event.title, event.date_from.isoformat(), event.date_to.isoformat())
+        return json.dumps(events)
 
 
 class Event(models.Model):
