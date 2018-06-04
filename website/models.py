@@ -1,8 +1,11 @@
 from enum import Enum
 
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Avg
+from django.utils import timezone
+import datetime
 
 
 class Role(Enum):
@@ -88,8 +91,8 @@ class Business(models.Model):
 
 class Event(models.Model):
     title = models.CharField(max_length=100)
-    date_from = models.DateTimeField()
-    date_to = models.DateTimeField()
+    date_from = models.DateTimeField(blank=False, null=False)
+    date_to = models.DateTimeField(blank=False, null=False)
     owner = models.ForeignKey(Client, on_delete=models.CASCADE)
     businesses = models.ManyToManyField(Business, blank=True)
 
@@ -98,6 +101,15 @@ class Event(models.Model):
 
     def get_duration(self):
         return self.date_to - self.date_from
+
+    def clean(self):
+        super().clean()
+        if not self.date_to or not self.date_from:
+            raise ValidationError('Event must have start and end date.')
+        if self.get_duration() < datetime.timedelta(days=0):
+            raise ValidationError('Invalid event duration.')
+        if self.date_from < timezone.now() or self.date_to < timezone.now():
+            raise ValidationError('You can not add past event.')
 
     get_duration.short_description = 'duration'
     get_duration.admin_order_field = 'date_from'
