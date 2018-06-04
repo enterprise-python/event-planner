@@ -28,7 +28,7 @@
                             {% for event in events_list %}
                                 <tr>
                                     <th scope="row">{{ forloop.counter }}</th>
-                                    <td>{{ event.title }}</td>
+                                    <td><a href="{% url 'website:event' event.pk %}">{{ event.title }}</a></td>
                                     <td>{{ event.date_from }}</td>
                                     <td>{{ event.date_to }}</td>
                                     <td>{% for business in event.businesses.all %}
