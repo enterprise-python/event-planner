@@ -1,4 +1,5 @@
 from enum import Enum
+import datetime
 import json
 
 from django.contrib.auth.models import AbstractUser
@@ -7,11 +8,10 @@ from django.db import models
 from django.db.models import Avg
 from django.utils.html import format_html
 from django.utils import timezone
-import datetime
+
 
 WIDTH_FIELD = 225
 HEIGHT_FIELD = 225
-
 
 class Role(Enum):
     ADMIN = 0
