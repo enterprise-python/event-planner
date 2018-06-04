@@ -324,7 +324,7 @@ class EditBusinessView(View):
     def _check_business_owner(user, pk):
         if not (user.is_contractor()
                 and Business.objects.get(pk=pk)
-                in user.contractor.business_set):
+                in user.contractor.business_set.all()):
             raise Http404()
 
     def get(self, request, pk):
