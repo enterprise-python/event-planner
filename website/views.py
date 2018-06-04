@@ -30,9 +30,7 @@ class ClientRegistrationView(View):
         client_form = self.client_form(request.POST)
 
         if user_form.is_valid() and client_form.is_valid():
-            user = user_form.save(commit=False)
-            user.role = Role.CLIENT.value
-            user.save()
+            user = user_form.save()
 
             client = client_form.save(commit=False)
             client.user = user
@@ -62,9 +60,7 @@ class ContractorRegistrationView(View):
         contractor_form = self.contractor_form(request.POST)
 
         if user_form.is_valid() and contractor_form.is_valid():
-            user = user_form.save(commit=False)
-            user.role = Role.CONTRACTOR.value
-            user.save()
+            user = user_form.save()
 
             contractor = contractor_form.save(commit=False)
             contractor.user = user

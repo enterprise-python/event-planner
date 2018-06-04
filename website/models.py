@@ -41,12 +41,20 @@ class Client(models.Model):
     def __str__(self):
         return 'client {}'.format(self.user.username)
 
+    def save(self, *args, **kwargs):
+        self.role = Role.CLIENT.value
+        super().save(*args, **kwargs)
+
 
 class Contractor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return 'contractor {}'.format(self.user.username)
+
+    def save(self, *args, **kwargs):
+        self.role = Role.CONTRACTOR.value
+        super().save(*args, **kwargs)
 
 
 class BusinessType(models.Model):
