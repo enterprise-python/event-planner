@@ -282,10 +282,13 @@ class EventTests(TestCase):
 
         rc = RequestClient()
         rc.force_login(self.client.user)
+        start_time = timezone.now() + datetime.timedelta(days=1)
+        end_time = start_time + datetime.timedelta(days=1)
+
         response = rc.post('/add-event/', {
             'title': 'event',
-            'date_from': '2018-05-27 12:00:00',
-            'date_to': '2018-05-27 13:00:00'
+            'date_from': start_time.strftime("%Y-%m-%d %H:%M:%S"),
+            'date_to': end_time.strftime("%Y-%m-%d %H:%M:%S")
         })
 
         self.assertRedirects(response, '/events/')
@@ -297,9 +300,7 @@ class EventTests(TestCase):
         rc = RequestClient()
         rc.force_login(self.client.user)
         response = rc.post('/add-event/', {
-            'title': 'event',
-            'date_from': '',
-            'date_to': ''
+            'title': 'event'
         })
 
         self.assertEqual(response.status_code, 200)
@@ -310,10 +311,12 @@ class EventTests(TestCase):
 
         rc = RequestClient()
         rc.force_login(self.client.user)
+        start_time = timezone.now() + datetime.timedelta(days=1)
+        end_time = start_time + datetime.timedelta(days=1)
         response = rc.post('/add-event/', {
             'title': '',
-            'date_from': '2018-05-27 12:00:00',
-            'date_to': '2018-05-27 13:00:00'
+            'date_from': start_time.strftime("%Y-%m-%d %H:%M:%S"),
+            'date_to': end_time.strftime("%Y-%m-%d %H:%M:%S")
         })
 
         self.assertEqual(response.status_code, 200)
@@ -331,10 +334,12 @@ class EventTests(TestCase):
 
         rc = RequestClient()
         rc.force_login(self.contractor.user)
+        start_time = timezone.now() + datetime.timedelta(days=1)
+        end_time = start_time + datetime.timedelta(days=1)
         response = rc.post('/add-event/', {
             'title': 'event',
-            'date_from': '2018-05-27 12:00:00',
-            'date_to': '2018-05-27 13:00:00'
+            'date_from': start_time.strftime("%Y-%m-%d %H:%M:%S"),
+            'date_to': end_time.strftime("%Y-%m-%d %H:%M:%S")
         })
 
         self.assertEqual(response.status_code, 404)

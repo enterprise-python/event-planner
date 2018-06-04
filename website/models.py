@@ -91,8 +91,8 @@ class Business(models.Model):
 
 class Event(models.Model):
     title = models.CharField(max_length=100)
-    date_from = models.DateTimeField()
-    date_to = models.DateTimeField()
+    date_from = models.DateTimeField(blank=False, null=False)
+    date_to = models.DateTimeField(blank=False, null=False)
     owner = models.ForeignKey(Client, on_delete=models.CASCADE)
     businesses = models.ManyToManyField(Business, blank=True)
 
@@ -104,6 +104,8 @@ class Event(models.Model):
 
     def clean(self):
         super().clean()
+        if not self.date_to or not self.date_from:
+            raise ValidationError('Event must have start and end date.')
         if self.get_duration() < datetime.timedelta(days=0):
             raise ValidationError('Invalid event duration.')
         if self.date_from < timezone.now() or self.date_to < timezone.now():
