@@ -519,3 +519,10 @@ h1{
     font-size: 1em;
     font-weight: bold;
 }
+
+.messages {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 10%;
+}
