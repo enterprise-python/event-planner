@@ -191,6 +191,26 @@ class LoginTests(TestCase):
         self.assertFalse(response.wsgi_request.user.is_authenticated)
 
 
+class BusinessTests(TestCase):
+    def setUp(self):
+        self.business_type = create_business_type()
+        self.owner = create_contractor()
+
+    def test_new_business_created_successfully(self):
+        self.assertEqual(Business.objects.all().count(), 0)
+
+        rc = RequestClient()
+        rc.force_login(self.owner.user)
+        response = rc.post('/add-business/', {
+            'name': 'some_business',
+            'business_type': self.business_type.id,
+            'description': 'Some description'
+        })
+
+        self.assertRedirects(response, '/main/')
+        self.assertEqual(Business.objects.all().count(), 1)
+
+
 class BusinessesListTests(TestCase):
 
     def setUp(self):

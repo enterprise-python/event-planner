@@ -177,20 +177,21 @@ class BusinessModelTests(TestCase):
         second_event_from = first_event_to + time_between_events
         second_event_to = second_event_from + event_duration
 
-        create_event(
+        e1 = create_event(
             date_from=first_event_from,
             date_to=first_event_to,
             business=self.business,
             owner=self.client
         )
-        create_event(
+        e2 = create_event(
             date_from=second_event_from,
             date_to=second_event_to,
             business=self.business,
             owner=self.client
         )
 
-        print(self.business.get_events_json())
+        self.assertTrue(e1.title in self.business.get_events_json())
+        self.assertTrue(e2.title in self.business.get_events_json())
 
 
 class EventModelTests(TestCase):

@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import DetailView, ListView, View
 
-from website.models import Business, Event, Role
+from website.models import Business, Event
 from .forms import (BusinessForm, ClientCreationForm, ClientEditForm,
                     ContractorCreationForm, ContractorEditForm, EventForm,
                     UserCreationForm, UserEditForm, CreateOpinionForm, UserEditAvatarForm)
@@ -206,6 +206,7 @@ class AddEventView(View):
             event.owner = request.user.client
             event.save()
             event.businesses.set(request.POST.getlist('businesses'))
+            messages.success(request, 'Your even was successfully created!')
 
             return HttpResponseRedirect(reverse('website:events'))
 
@@ -278,13 +279,13 @@ class AddBusinessView(View):
     def post(self, request):
         if not request.user.is_contractor():
             raise Http404()
-
         business_form = self.business_form(request.POST)
 
         if business_form.is_valid():
             business = business_form.save(commit=False)
             business.owner = request.user.contractor
             business.save()
+            messages.success(request, 'Your business was successfully created!')
 
             return HttpResponseRedirect(reverse('website:main'))
 
