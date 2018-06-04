@@ -1,8 +1,11 @@
 from enum import Enum
 
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Avg
+from django.utils import timezone
+import datetime
 
 
 class Role(Enum):
@@ -98,6 +101,13 @@ class Event(models.Model):
 
     def get_duration(self):
         return self.date_to - self.date_from
+
+    def clean(self):
+        super().clean()
+        if self.get_duration() < datetime.timedelta(days=0):
+            raise ValidationError('Invalid event duration.')
+        if self.date_from < timezone.now() or self.date_to < timezone.now():
+            raise ValidationError('You can not add past event.')
 
     get_duration.short_description = 'duration'
     get_duration.admin_order_field = 'date_from'
