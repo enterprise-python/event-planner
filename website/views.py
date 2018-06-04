@@ -244,7 +244,7 @@ class EditEventView(View):
     @staticmethod
     def _check_event_owner(user, pk):
         if not (user.is_client()
-                and Event.objects.get(pk=pk) in user.client.event_set):
+                and Event.objects.get(pk=pk) in user.client.event_set.all()):
             raise Http404()
 
     def get(self, request, pk):
