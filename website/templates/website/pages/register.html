@@ -7,9 +7,9 @@
         <div class="page-header-image "
              style="background-image:
                      {% if client_form %}
-                        url( {% static 'website/img/bg_client_registration.jpg' %});
+                         url( {% static 'website/img/bg_client_registration.jpg' %});
                      {% else %}
-                        url( {% static 'website/img/bg_register.jpg' %});
+                         url( {% static 'website/img/bg_register.jpg' %});
                      {% endif %}">
         </div>
 
@@ -40,5 +40,7 @@
 {% endblock content %}
 
 {% block js %}
-    $('[data-toggle="tooltip"]').tooltip();
+    <script type="text/javascript">
+        $('[data-toggle="tooltip"]').tooltip();
+    </script>
 {% endblock js %}

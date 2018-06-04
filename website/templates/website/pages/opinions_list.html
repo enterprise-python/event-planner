@@ -1,28 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'website/pages/base.html' %}
 
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+{% load staticfiles %}
+pa
+{% block content %}
+    <div class="page-header" id="edit-page-header" style="pointer-events: auto">
+        <div class="page-header-image"
+             style="background-image:url( {% static 'website/img/birthday.jpg' %});">
+        </div>
+        <div class="container col-md-9 pt-5">
+            <div class="content">
+                {% if opinions %}
+                    <h2>Opinions for <a href="{% url 'website:business' business.pk %}">{{ business.name }}</a>:</h2>
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">Opinion</th>
+                            <th scope="col">Rating</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for opinion in opinions %}
+                            <tr>
+                                <td>Text: {{ opinion.text }}</td>
+                                <td>Rating: {{ opinion.rating }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="info">No opinions!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
-{% if opinions %}
-    <h2>Opinions for <a href="{% url 'website:business' business.pk %}">{{ business.name }}</a></h2>
 
-    {% for opinion in opinions %}
-        <h1>Text: {{ opinion.text }}</h1>
-        <p>Rating: {{ opinion.rating }}</p>
-    {% endfor %}
-{% else %}
-    <p>No opinions!</p>
-{% endif %}
-</body>
-</html>

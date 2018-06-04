@@ -13,9 +13,12 @@
 
     {% include 'website/page_elements/fonts_icons.html' %}
     {% include 'website/page_elements/css_includes.html' %}
+    {% block css %}
+    {% endblock %}
 </head>
 
 <body class="template-page sidebar-collapse">
+{% include 'website/page_elements/messages.html' %}
 {% if not user.is_authenticated %}
     {% include 'website/page_elements/navbar.html' %}
 {% endif %}
@@ -48,10 +51,8 @@
 {% include 'website/page_elements/core_js.html' %}
 {% include 'website/page_elements/utilities.html' %}
 
-<script type="text/javascript">
-    {% block js %}
 
-    {% endblock js %}
-</script>
+{% block js %}
+{% endblock js %}
 
 </html>

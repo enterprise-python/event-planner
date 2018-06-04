@@ -3,26 +3,29 @@
 {% load staticfiles %}
 
 {% block content %}
-
-<form class="form" method="post" action="">
-    {% csrf_token %}
-    <div class="header header-primary text-center">
-        <div class="logo-container">
-            Event Planner Logo
+    <div class="page-header" id="edit-page-header" style="pointer-events: auto">
+        <div class="page-header-image"
+             style="background-image:url( {% static 'website/img/glasses.jpg' %});">
+        </div>
+        <div class="container col-md-9 pt-5">
+            <div class="content" style="margin-top:10%">
+                <form class="form" method="post" action="">
+                    {% csrf_token %}
+                    <div class="content">
+                        <h2>Add opinion for <a href="{% url 'website:business' business.pk %}">{{ business.name }}</a>
+                        </h2>
+                        {% for field in add_opinion_form %}
+                            <div class="form-group form-group-no-border input-lg">
+                                {{ field }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="footer text-center col-md-5" style="margin-left: 28%">
+                        <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Add Opinion!
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-    <div class="content">
-        <h2>Add opinion for <a href="{% url 'website:business' business.pk %}">{{ business.name }}</a></h2>
-
-        {% for field in add_opinion_form %}
-            <div class="form-group form-group-no-border input-lg">
-                {{ field }}
-            </div>
-        {% endfor %}
-    </div>
-    <div class="footer text-center">
-        <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Add Opinion!</button>
-    </div>
-</form>
-
 {% endblock %}

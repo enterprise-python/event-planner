@@ -42,12 +42,14 @@
 {% endblock %}
 
 {% block js %}
-    $(document).ready(function(){
-    $("#businessSearch").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#businessList tr").filter(function() {
-    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-    });
-    });
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#businessSearch").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#businessList tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
 {% endblock %}
