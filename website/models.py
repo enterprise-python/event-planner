@@ -3,6 +3,10 @@ from enum import Enum
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import Avg
+from django.utils.html import format_html
+
+WIDTH_FIELD = 225
+HEIGHT_FIELD = 225
 
 
 class Role(Enum):
@@ -15,6 +19,20 @@ class User(AbstractUser):
     email = models.EmailField('email address', blank=False, unique=True)
     role = models.PositiveSmallIntegerField(blank=False,
                                             default=Role.ADMIN.value)
+    # avatar = models.ImageField('avatar', width_field=WIDTH_FIELD, height_field=HEIGHT_FIELD,
+    #                            blank=True, upload_to='avatars')
+    #
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    #     from PIL import Image
+    #
+    #     print("IMG: ", self.avatar.path)
+    #     photo = Image.open(self.avatar.path)
+    #     photo.thumbnail((WIDTH_FIELD, HEIGHT_FIELD))
+    #     photo.save(self.get_t)
+    #
+    # def image_tag(self):
+    #     return format_html('<img src="%s" alt="%s">')
 
     def __str__(self):
         return self.username
