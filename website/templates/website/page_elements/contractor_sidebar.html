@@ -11,7 +11,7 @@
         <ul class="collapse list-unstyled" id="businesses_menu">
             {% for business in businesses %}
                 <li>
-                    <a href="#">
+                    <a href="{% url 'website:business' business.pk %}">
                         <p>{{ business.name }}</p>
                     </a>
                 <li>
@@ -21,7 +21,7 @@
                 <p>Add new business</p>
             </a>
         </ul>
-        <a href="#">
+        <a href="{% url 'website:ranking' %}">
             <i class="material-icons">star</i>
             <p>Ranking</p>
         </a>

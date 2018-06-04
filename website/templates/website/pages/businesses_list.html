@@ -1,9 +1,53 @@
 {% extends 'website/pages/base.html' %}
 
+{% load staticfiles %}
+
 {% block content %}
+    <div class="page-header" id="edit-page-header" style="pointer-events: auto">
+        <div class="page-header-image"
+             style="background-image:url( {% static 'website/img/card.jpg' %});">
+        </div>
+        <div class="container col-md-9 pt-5">
+            <div class="content">
+                <div class="header text-center white-text pt-5">
+                    Search for business
+                </div>
+                <div class="input-group form-group-no-border input-lg">
+                    <input class="form-control" id="businessSearch" type="text"
+                           placeholder="Search by business name, type or owner..">
+                </div>
+                <table class="table table-hover" id="businessList">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Owner</th>
+                        <th scope="col">Category</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for business in businesses_list %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td><a href="{% url 'website:business' business.pk %}">{{ business.name }}</a></td>
+                            <td>{{ business.owner|cut:"contractor " }}</td>
+                            <td>{{ business.business_type }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
-    {% for business in businesses_list %}
-        {{ business.name }}
-    {% endfor %}
-
+{% block js %}
+    $(document).ready(function(){
+    $("#businessSearch").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#businessList tr").filter(function() {
+    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+    });
+    });
 {% endblock %}
