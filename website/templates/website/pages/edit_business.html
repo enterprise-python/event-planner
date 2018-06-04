@@ -5,21 +5,21 @@
 {% block content %}
     <div class="page-header" id="edit-page-header">
         <div class="page-header-image"
-             style="background-image:url({% static 'website/img/room.jpg' %})">
+             style="background-image:url({% static 'website/img/decorated_table.jpg' %})">
         </div>
         <div class="content-center" id="edit-content-center">
             <div class="card card-login card-plain">
                 <form class="form" method="post" action="">
                     {% csrf_token %}
                     <div>
-                        <h4>Edit your new business</h4>
+                        <h4>Edit your business</h4>
                     </div>
                     <div class="content">
                         <div id="edit-row">
                             <div class="col-md-10">
                                 {% include 'website/page_elements/add_business_form.html' %}
                                 <div class="footer text-center">
-                                    <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Confirm
+                                    <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Save changes
                                     </button>
                                 </div>
                             </div>
