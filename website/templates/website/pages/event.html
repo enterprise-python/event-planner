@@ -1,10 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-{{ event.title }}
-</body>
-</html>
+{% extends 'website/pages/base.html' %}
+
+{% load staticfiles %}
+{% block content %}
+    <div class="page-header" id="edit-page-header" style="pointer-events: auto">
+        <div class="page-header-image"
+             style="background-image:url( {% static 'website/img/bg_add_event.jpg' %});">
+        </div>
+
+        <div class="container col-md-6">
+            <div class="content">
+                <div class="card card-login card-plain mt-5">
+                    <div class="header text-center white-text">
+                        {{ event.title }}
+                    </div>
+                    {% if event %}
+                        <table class="table table-hover table-lg">
+                            <thead>
+                            <tr>
+                                <th scope="col">Start date</th>
+                                <th scope="col">End date</th>
+                            </tr>
+                            </thead>
+                            <tbody id="businessTable">
+                            <tr>
+                                <td>{{ event.date_from }}</td>
+                                <td>{{ event.date_to }}</td>
+                            </tr>
+                            <thead>
+                            <tr>
+                                <th colspan="2">Businesses involved</th>
+                            </tr>
+                            </thead>
+                            {% for business in event.businesses.all %}
+                                <tr class="text_align-left">
+                                    <td colspan="2">
+                                        {{ forloop.counter }}
+                                        <a href="{% url 'website:business' business.pk %}">{{ business }}</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>No such event!</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="button-container">
+                <a href="{% url 'website:edit_event' event.pk %}" class="btn btn-primary btn-round btn-lg">Edit
+                    event</a>
+                <a href="{% url 'website:events' %}" class="btn btn-primary btn-round btn-lg">Return</a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
