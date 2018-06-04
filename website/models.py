@@ -1,5 +1,6 @@
 from enum import Enum
 import datetime
+import json
 
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
@@ -11,7 +12,6 @@ from django.utils import timezone
 
 WIDTH_FIELD = 225
 HEIGHT_FIELD = 225
-
 
 class Role(Enum):
     ADMIN = 0
@@ -117,6 +117,12 @@ class Business(models.Model):
             event_schedule.append((event_id, event.date_from, event.date_to))
 
         return event_schedule
+
+    def get_events_json(self):
+        events = {}
+        for event_id, event in enumerate(self.event_set.all()):
+            events[event_id] = (event.title, event.date_from.isoformat(), event.date_to.isoformat())
+        return json.dumps(events)
 
 
 class Event(models.Model):

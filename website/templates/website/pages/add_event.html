@@ -2,10 +2,14 @@
 
 {% load staticfiles %}
 
+{% block css %}
+    <link href="{% static 'website/css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet"/>
+{% endblock css %}
+
 {% block content %}
     <div class="page-header" id="edit-page-header" style="pointer-events: auto">
         <div class="page-header-image"
-             style="background-image:url( {% static 'website/img/bg_add_event.jpg' %});">
+             style="background-image:url( {% static 'website/img/pineapple.jpg' %});">
         </div>
 
         <div class="container col-md-9">
@@ -28,24 +32,27 @@
         </div>
     </div>
 {% endblock content %}
-
 {% block js %}
-    $('.form_datetime').datetimepicker({
-    weekStart: 1,
-    todayBtn:  1,
-    autoclose: 1,
-    todayHighlight: 1,
-    minuteStep: 15,
-    startDate: "{% now "Y-m-d H:m" %}",
-    pickerPosition: "bottom-left"
-    });
+    <script src="{% static 'website/js/vendor/bootstrap-datetimepicker.min.js' %}" type="text/javascript"></script>
+    <script type="text/javascript">
+        $('.form_datetime').datetimepicker({
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            minuteStep: 15,
+            startDate: "{% now "Y-m-d H:m" %}",
+            pickerPosition: "bottom-left"
+        });
 
-    $(document).ready(function(){
-    $("#businessSearch").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#businessSelect option").filter(function() {
-    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-    });
-    });
+        $(document).ready(function () {
+            $("#businessSearch").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#businessSelect option").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
+    </script>
 {% endblock js %}
