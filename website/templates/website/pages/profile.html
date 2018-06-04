@@ -24,7 +24,7 @@
     <div class="button-container">
         <a href="{% url 'website:edit' %}" class="btn btn-primary btn-round btn-lg">Edit profile</a>
         {% if request.user.is_client %}
-            <a href="{% url 'website:add_event' %}" class="btn btn-primary btn-round btn-lg">Show Events</a>
+            <a href="{% url 'website:events' %}" class="btn btn-primary btn-round btn-lg">Show Events</a>
         {% else %}
             <a href="{% url 'website:add_business' %}" class="btn btn-primary btn-round btn-lg">Add business</a>
         {% endif %}
