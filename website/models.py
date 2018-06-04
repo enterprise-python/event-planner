@@ -19,20 +19,20 @@ class User(AbstractUser):
     email = models.EmailField('email address', blank=False, unique=True)
     role = models.PositiveSmallIntegerField(blank=False,
                                             default=Role.ADMIN.value)
-    # avatar = models.ImageField('avatar', width_field=WIDTH_FIELD, height_field=HEIGHT_FIELD,
-    #                            blank=True, upload_to='avatars')
-    #
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)
-    #     from PIL import Image
-    #
-    #     print("IMG: ", self.avatar.path)
-    #     photo = Image.open(self.avatar.path)
+    avatar = models.ImageField('avatar', width_field=WIDTH_FIELD, height_field=HEIGHT_FIELD,
+                               blank=True, upload_to='avatars')
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        from PIL import Image
+
+        # print("IMG: ", self.avatar.path)
+        # photo = Image.open(self.avatar.path)
     #     photo.thumbnail((WIDTH_FIELD, HEIGHT_FIELD))
     #     photo.save(self.get_t)
-    #
-    # def image_tag(self):
-    #     return format_html('<img src="%s" alt="%s">')
+
+    def image_tag(self):
+        return format_html('<img src="%s" alt="%s">')
 
     def __str__(self):
         return self.username
@@ -60,7 +60,8 @@ class Client(models.Model):
         return 'client {}'.format(self.user.username)
 
     def save(self, *args, **kwargs):
-        self.role = Role.CLIENT.value
+        self.user.role = Role.CLIENT.value
+        self.user.save()
         super().save(*args, **kwargs)
 
 
@@ -71,7 +72,8 @@ class Contractor(models.Model):
         return 'contractor {}'.format(self.user.username)
 
     def save(self, *args, **kwargs):
-        self.role = Role.CONTRACTOR.value
+        self.user.role = Role.CONTRACTOR.value
+        self.user.save()
         super().save(*args, **kwargs)
 
 

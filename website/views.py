@@ -36,6 +36,7 @@ class ClientRegistrationView(View):
             client.user = user
             client.save()
 
+            messages.success(request, 'Client created successfully!')
             return HttpResponseRedirect(reverse('website:login'))
 
         return render(request, self.template_name, {
@@ -65,7 +66,7 @@ class ContractorRegistrationView(View):
             contractor = contractor_form.save(commit=False)
             contractor.user = user
             contractor.save()
-
+            messages.success(request, 'Contractor created successfully!')
             return HttpResponseRedirect(reverse('website:login'))
 
         return render(request, self.template_name, {
