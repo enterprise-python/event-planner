@@ -19,8 +19,8 @@ class User(AbstractUser):
     email = models.EmailField('email address', blank=False, unique=True)
     role = models.PositiveSmallIntegerField(blank=False,
                                             default=Role.ADMIN.value)
-    avatar = models.ImageField('avatar', width_field=WIDTH_FIELD, height_field=HEIGHT_FIELD,
-                               blank=True, upload_to='avatars')
+    avatar = models.ImageField('avatar', upload_to='avatars/',
+                               default='default_image.png')
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -28,6 +28,7 @@ class User(AbstractUser):
 
         # print("IMG: ", self.avatar.path)
         # photo = Image.open(self.avatar.path)
+
     #     photo.thumbnail((WIDTH_FIELD, HEIGHT_FIELD))
     #     photo.save(self.get_t)
 

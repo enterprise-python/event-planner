@@ -13,7 +13,7 @@
             <div class="content-center">
                 <div class="photo-container">
                     <a href="photo-change"></a>
-                    <img class="cover" src={% static 'website/img/no-image.png' %} alt="">
+                    <img class="cover" src="{{ request.user.avatar.url }}" alt="">
                 </div>
                 <p class="info">{{ request.user.username }}</p>
                 <h3 class="title">{{ request.user.first_name }} {{ request.user.last_name }}</h3>

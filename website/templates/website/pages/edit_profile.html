@@ -10,9 +10,18 @@
     <div class="content-center" id="edit-content-center">
         <div class="photo-container">
             <a href="photo-change"></a>
-            <img class="cover" src={% static 'website/img/no-image.png' %} alt="">
+            <img class="cover" src='{{ request.user.avatar.url }}' alt="">
         </div>
         <div class="button-container">
+            <form class="form" method="post" action="">
+                {% csrf_token %}
+                <div class="content">
+                    {{ edit_avatar_form }}
+                </div>
+                <div class="footer text-center">
+                    <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Add Opinion!</button>
+                </div>
+            </form>
             <a href="#button" class="btn btn-primary btn-round btn-lg" id="change-photo">Edit avatar</a>
         </div>
         <div class="row">
