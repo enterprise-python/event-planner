@@ -300,7 +300,9 @@ class EventTests(TestCase):
         rc = RequestClient()
         rc.force_login(self.client.user)
         response = rc.post('/add-event/', {
-            'title': 'event'
+            'title': 'event',
+            'date_from': '',
+            'date_to': ''
         })
 
         self.assertEqual(response.status_code, 200)
