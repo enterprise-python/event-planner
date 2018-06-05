@@ -217,7 +217,7 @@ class AddEventView(View):
 
 class EditEventView(View):
     event_form = EventForm
-    template_name = 'website/pages/edit_event.html'
+    template_name = 'website/pages/add_event.html'
 
     @staticmethod
     def _check_event_owner(user, pk):

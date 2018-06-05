@@ -15,10 +15,14 @@
         <div class="container col-md-9">
             <div class="content">
                 <div class="card card-login card-plain mt-5">
-                    <form class="form" method="post" action="">
+                    <form class="form form-group col-md-8 mx-auto" method="post" action="">
                         {% csrf_token %}
                         <div class="header text-center white-text">
-                            Create event!
+                            {% if request.path|slice:"-5:-1" == "edit" %}
+                                Edit event:  {{ event_form.title.value }}
+                            {% else %}
+                                Create event!
+                            {% endif %}
                         </div>
                         <div class="content">
                             {% include 'website/page_elements/event_form.html' %}
@@ -37,7 +41,6 @@
     <script type="text/javascript">
         $('.form_datetime').datetimepicker({
             weekStart: 1,
-            todayBtn: 1,
             autoclose: 1,
             todayHighlight: 1,
             minuteStep: 15,

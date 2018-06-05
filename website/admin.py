@@ -51,7 +51,7 @@ class BusinessAdmin(admin.ModelAdmin):
         fields = ('text', 'rating')
 
     inlines = [OpinionInline]
-    fields = ('name', 'owner', 'business_type')
+    fields = ('name', 'owner', 'business_type', 'description')
     list_display = ('name', 'owner', 'business_type', 'get_average_rating')
     list_filter = ('business_type',)
     search_fields = ('name',)
