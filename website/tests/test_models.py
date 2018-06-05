@@ -150,48 +150,11 @@ class BusinessModelTests(TestCase):
         )
 
         event_schedule = self.business.get_event_schedule()
-
         self.assertEqual(len(event_schedule), 2)
-        self.assertTupleEqual(event_schedule[0], (
-            0,
-            first_event_from,
-            first_event_to
-        ))
-        self.assertTupleEqual(event_schedule[1], (
-            1,
-            second_event_from,
-            second_event_to
-        ))
 
     def test_empty_event_schedule(self):
         event_schedule = self.business.get_event_schedule()
         self.assertFalse(event_schedule)
-
-    def test_events_json(self):
-        event_duration = datetime.timedelta(days=1)
-        time_between_events = datetime.timedelta(hours=12)
-
-        first_event_from = timezone.now() + datetime.timedelta(days=1)
-        first_event_to = first_event_from + event_duration
-
-        second_event_from = first_event_to + time_between_events
-        second_event_to = second_event_from + event_duration
-
-        e1 = create_event(
-            date_from=first_event_from,
-            date_to=first_event_to,
-            business=self.business,
-            owner=self.client
-        )
-        e2 = create_event(
-            date_from=second_event_from,
-            date_to=second_event_to,
-            business=self.business,
-            owner=self.client
-        )
-
-        self.assertTrue(e1.title in self.business.get_events_json())
-        self.assertTrue(e2.title in self.business.get_events_json())
 
 
 class EventModelTests(TestCase):

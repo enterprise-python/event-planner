@@ -1,17 +1,15 @@
 from enum import Enum
 import datetime
-import json
 
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Avg
-from django.utils.html import format_html
 from django.utils import timezone
-
 
 WIDTH_FIELD = 225
 HEIGHT_FIELD = 225
+
 
 class Role(Enum):
     ADMIN = 0
@@ -26,18 +24,15 @@ class User(AbstractUser):
     avatar = models.ImageField('avatar', upload_to='avatars/',
                                default='default_image.png')
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        from PIL import Image
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    #     from PIL import Image
 
-        # print("IMG: ", self.avatar.path)
-        # photo = Image.open(self.avatar.path)
+    # print("IMG: ", self.avatar.path)
+    # photo = Image.open(self.avatar.path)
 
     #     photo.thumbnail((WIDTH_FIELD, HEIGHT_FIELD))
     #     photo.save(self.get_t)
-
-    def image_tag(self):
-        return format_html('<img src="%s" alt="%s">')
 
     def __str__(self):
         return self.username
@@ -113,16 +108,18 @@ class Business(models.Model):
 
     def get_event_schedule(self):
         event_schedule = []
-        for event_id, event in enumerate(self.event_set.all()):
-            event_schedule.append((event_id, event.date_from, event.date_to))
+        for event in self.event_set.all():
+            event_dict = {
+                "id": str(event.pk),
+                "title": str(event.title),
+                "url": "/event/{}".format(event.pk),
+                "class": "event-special",
+                "start": str(event.date_from.timestamp() * 1000),
+                "end": str(event.date_to.timestamp() * 1000)
+            }
+            event_schedule.append(event_dict)
 
         return event_schedule
-
-    def get_events_json(self):
-        events = {}
-        for event_id, event in enumerate(self.event_set.all()):
-            events[event_id] = (event.title, event.date_from.isoformat(), event.date_to.isoformat())
-        return json.dumps(events)
 
 
 class Event(models.Model):
