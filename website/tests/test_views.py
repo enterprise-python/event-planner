@@ -405,7 +405,7 @@ class OpinionTests(TestCase):
         self.assertRedirects(response, '/business/1/')
         self.assertEqual(
             list(get_messages(response.wsgi_request))[0].message,
-            'This business did not handle any of your events.')
+            'This business has not handled any of your events.')
 
     def test_add_opinion_successfully(self):
         self.assertEqual(Opinion.objects.all().count(), 0)
@@ -425,7 +425,7 @@ class OpinionTests(TestCase):
         self.assertRedirects(response, '/business/1/')
         self.assertEqual(
             list(get_messages(response.wsgi_request))[0].message,
-            'Your opinion was successfully added!')
+            'Your opinion has been successfully added!')
 
     def test_add_opinion_to_non_existing_business(self):
         rc = RequestClient()
@@ -452,7 +452,7 @@ class OpinionTests(TestCase):
         self.assertRedirects(response, '/business/1/')
         self.assertEqual(
             list(get_messages(response.wsgi_request))[0].message,
-            'This business did not handle any of your events.')
+            'This business has not handled any of your events.')
 
     def test_add_opinion_twice(self):
         self.assertEqual(Opinion.objects.all().count(), 0)
@@ -479,10 +479,10 @@ class OpinionTests(TestCase):
         self.assertRedirects(response, '/business/1/')
         self.assertEqual(
             list(get_messages(response.wsgi_request))[0].message,
-            'Your opinion was successfully added!')
+            'Your opinion has been successfully added!')
         self.assertEqual(
             list(get_messages(response.wsgi_request))[1].message,
-            'Cannot add more opinions on this business.')
+            'You cannot add more opinions on this business.')
 
 
 class MainPageTests(TestCase):
