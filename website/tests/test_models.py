@@ -127,42 +127,30 @@ class BusinessModelTests(TestCase):
         self.assertEqual(self.business.get_average_rating(), 4)
 
     def test_event_schedule(self):
-        pass
-        # event_duration = datetime.timedelta(days=1)
-        # time_between_events = datetime.timedelta(hours=12)
-				#
-        # first_event_from = timezone.now()
-        # first_event_to = first_event_from + event_duration
-				#
-        # second_event_from = first_event_to + time_between_events
-        # second_event_to = second_event_from + event_duration
-				#
-        # create_event(
-        #     date_from=first_event_from,
-        #     date_to=first_event_to,
-        #     business=self.business,
-        #     owner=self.client
-        # )
-        # create_event(
-        #     date_from=second_event_from,
-        #     date_to=second_event_to,
-        #     business=self.business,
-        #     owner=self.client
-        # )
-				#
-        # event_schedule = self.business.get_event_schedule()
-				#
-        # self.assertEqual(len(event_schedule), 2)
-        # self.assertTupleEqual(event_schedule[0], (
-        #     0,
-        #     first_event_from,
-        #     first_event_to
-        # ))
-        # self.assertTupleEqual(event_schedule[1], (
-        #     1,
-        #     second_event_from,
-        #     second_event_to
-        # ))
+        event_duration = datetime.timedelta(days=1)
+        time_between_events = datetime.timedelta(hours=12)
+
+        first_event_from = timezone.now()
+        first_event_to = first_event_from + event_duration
+
+        second_event_from = first_event_to + time_between_events
+        second_event_to = second_event_from + event_duration
+
+        create_event(
+            date_from=first_event_from,
+            date_to=first_event_to,
+            business=self.business,
+            owner=self.client
+        )
+        create_event(
+            date_from=second_event_from,
+            date_to=second_event_to,
+            business=self.business,
+            owner=self.client
+        )
+
+        event_schedule = self.business.get_event_schedule()
+        self.assertEqual(len(event_schedule), 2)
 
     def test_empty_event_schedule(self):
         event_schedule = self.business.get_event_schedule()
