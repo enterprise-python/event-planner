@@ -112,12 +112,12 @@ class ProfileEditView(View):
         if context['change_password_form'].is_valid():
             user = context['change_password_form'].save()
             update_session_auth_hash(request, user)
-            messages.success(request, 'Your password was successfully updated!')
+            messages.success(request, 'Your password has been successfully updated!')
 
             return HttpResponseRedirect(reverse('website:edit'))
         elif context['edit_avatar_form'].is_valid():
             context['edit_avatar_form'].save()
-            messages.success(request, 'Your avatar was successfully updated!')
+            messages.success(request, 'Your avatar has been successfully updated!')
 
             return HttpResponseRedirect(reverse('website:edit'))
 
@@ -133,7 +133,7 @@ class ProfileEditView(View):
         if context['user_edit_form'].is_valid() and context['client_edit_form'].is_valid():
             context['user_edit_form'].save()
             context['client_edit_form'].save()
-            messages.success(request, 'Your profile was successfully updated!')
+            messages.success(request, 'Your profile has been successfully updated!')
 
             return HttpResponseRedirect(reverse('website:edit'))
 
@@ -148,7 +148,7 @@ class ProfileEditView(View):
         if context['user_edit_form'].is_valid() and context['contractor_edit_form'].is_valid():
             context['user_edit_form'].save()
             context['contractor_edit_form'].save()
-            messages.success(request, 'Your profile was successfully updated!')
+            messages.success(request, 'Your profile has been successfully updated!')
 
             return HttpResponseRedirect(reverse('website:edit'))
 
@@ -206,7 +206,7 @@ class AddEventView(View):
             event.owner = request.user.client
             event.save()
             event.businesses.set(request.POST.getlist('businesses'))
-            messages.success(request, 'Your even was successfully created!')
+            messages.success(request, 'Your event has been successfully created!')
 
             return HttpResponseRedirect(reverse('website:events'))
 
@@ -217,7 +217,7 @@ class AddEventView(View):
 
 class EditEventView(View):
     event_form = EventForm
-    template_name = 'website/pages/edit_event.html'
+    template_name = 'website/pages/add_event.html'
 
     @staticmethod
     def _check_event_owner(user, pk):
@@ -237,7 +237,7 @@ class EditEventView(View):
                                      instance=Event.objects.get(pk=pk))
         if event_form.is_valid():
             event_form.save()
-            messages.success(request, 'Your event was successfully updated!')
+            messages.success(request, 'Your event has been successfully updated!')
 
             return HttpResponseRedirect(reverse('website:events'))
 
@@ -285,7 +285,7 @@ class AddBusinessView(View):
             business = business_form.save(commit=False)
             business.owner = request.user.contractor
             business.save()
-            messages.success(request, 'Your business was successfully created!')
+            messages.success(request, 'Your business has been successfully created!')
 
             return HttpResponseRedirect(reverse('website:main'))
 
@@ -320,7 +320,7 @@ class EditBusinessView(View):
                                            instance=Business.objects.get(pk=pk))
         if business_form.is_valid():
             business_form.save()
-            messages.success(request, 'Your business was successfully updated!')
+            messages.success(request, 'Your business has been successfully updated!')
 
             return HttpResponseRedirect(reverse('website:main'))
 
@@ -357,7 +357,7 @@ class AddOpinionView(View):
             date_to__lt=timezone.now()).count()
 
         if events_count == 0:
-            messages.error(request, 'This business did not handle any of your events.')
+            messages.error(request, 'This business has not handled any of your events.')
             return HttpResponseRedirect(
                 reverse('website:business', kwargs={'pk': pk}))
 
@@ -366,7 +366,7 @@ class AddOpinionView(View):
         ).count()
 
         if events_count <= created_opinions_count:
-            messages.error(request, 'Cannot add more opinions on this business.')
+            messages.error(request, 'You cannot add more opinions on this business.')
             return HttpResponseRedirect(
                 reverse('website:business', kwargs={'pk': pk}))
 
@@ -376,7 +376,7 @@ class AddOpinionView(View):
             opinion.business = business
             opinion.save()
 
-            messages.success(request, 'Your opinion was successfully added!')
+            messages.success(request, 'Your opinion has been successfully added!')
             return HttpResponseRedirect(
                 reverse('website:business', kwargs={'pk': pk}))
 
