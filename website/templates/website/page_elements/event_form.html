@@ -20,26 +20,26 @@
     {% endwith %}
 </div>
 
-<div class="d-inline-block form-group form-group-no-border input-lg col-md-4">
+<div class="d-inline-block form-group form-group-no-border input-lg col-sm-5">
     {% with form_field=event_form.date_from %}
         {% include 'website/page_elements/form_errors.html' %}
         <input class="form-control input-append date form_datetime" size="16"
 
                type="{{ form_field.field.widget.input_type }}"
                placeholder="{{ form_field.label }}..."
-               value="{% if form_field.value %}{{ form_field.value }}{% endif %}"
+               value="{% if form_field.value %}{{ form_field.value|date:"Y-m-d H:i" }}{% endif %}"
                name="{{ form_field.name }}">
     {% endwith %}
     <span class=" add-on"><i class="icon-th"></i></span>
 </div>
 
-<div class="d-inline-block form-group form-group-no-border input-lg col-md-4">
+<div class="d-inline-block form-group form-group-no-border input-lg col-sm-5">
     {% with form_field=event_form.date_to %}
         {% include 'website/page_elements/form_errors.html' %}
         <input class="form-control input-append date form_datetime" size="16"
                type="{{ form_field.field.widget.input_type }}"
                placeholder="{{ form_field.label }}..."
-               value="{% if form_field.value %}{{ form_field.value }}{% endif %}"
+               value="{% if form_field.value %}{{ form_field.value|date:"Y-m-d H:i" }}{% endif %}"
                name="{{ form_field.name }}">
     {% endwith %}
     <span class=" add-on"><i class="icon-th"></i></span>
@@ -47,10 +47,10 @@
 
 <div class="input-group form-group-no-border input-lg">
     <input class="form-control" id="businessSearch" type="text"
-           placeholder="Search by business name, type or owner..">
+           placeholder="Search by business name...">
 </div>
 
-<div class="form-group form-group-no-border col-md-6 mx-auto">
+<div class="form-group form-group-no-border col-sm-10 mx-auto">
     {% with form_field=event_form.businesses %}
         {% include 'website/page_elements/form_errors.html' %}
         <select multiple class="form-control bg-primary white-text" id="businessSelect" name="{{ form_field.name }}"
