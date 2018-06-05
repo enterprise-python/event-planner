@@ -7,20 +7,22 @@
 {% endblock css %}
 
 {% block content %}
-    <div class="main-image" id="filter" data-parallax="true" style="background-image:url({% static 'website/img/table_2.jpg' %})">
+    <div class="main-image" id="filter" data-parallax="true"
+         style="background-image:url({% static 'website/img/table_2.jpg' %})">
         <div class="container">
             <div class="content-center">
-                <h3 class="display-1">{{ business.name }}</h3>
+                <h3 class="display-2">{{ business.name }}</h3>
                 <p class="info">{{ business.business_type }}</p>
-                <div class="row" style="margin-top: 6%">
-                    <div class="col-md-6">
+                <div class="row mt-4" >
+                    <div class="col-md-4">
                         <div class="btn-group">
                             <button class="btn btn-primary btn-sm" data-calendar-nav="prev"><< Prev</button>
                             <button class="btn btn-primary btn-sm" data-calendar-nav="today">Today</button>
                             <button class="btn btn-primary btn-sm" data-calendar-nav="next">Next >></button>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <span id="timeRangeName" class="h5 white-text col-md-3"></span>
+                    <div class="col-md-4">
                         <div class="btn-group">
                             <button class="btn btn-primary btn-sm" data-calendar-view="year">Year</button>
                             <button class="btn btn-primary active btn-sm" data-calendar-view="month">Month</button>
@@ -49,7 +51,7 @@
     <script type="text/javascript" src="{% static 'website/js/vendor/calendar.min.js' %}"></script>
     <script type="text/javascript">
         var options = {
-            events_source: "{% static 'website/js/vendor/tmpls/events.json.php' %}",
+            events_source: {{ business.get_event_schedule|safe }},
             view: 'month',
             tmpl_path: "{% static 'website/js/vendor/tmpls' %}/",
             tmpl_cache: false,
@@ -58,17 +60,9 @@
                 if (!events) {
                     return;
                 }
-                var list = $('#eventlist');
-                list.html('');
-
-                $.each(events, function (key, val) {
-                    $(document.createElement('li'))
-                        .html('<a href="' + val.url + '">' + val.title + '</a>')
-                        .appendTo(list);
-                });
             },
             onAfterViewLoad: function (view) {
-                $('.page-header h3').text(this.getTitle());
+                $('.row #timeRangeName').text(this.getTitle());
                 $('.btn-group button').removeClass('active');
                 $('button[data-calendar-view="' + view + '"]').addClass('active');
             },
@@ -98,17 +92,6 @@
         $('#events-in-modal').change(function () {
             var val = $(this).is(':checked') ? $(this).val() : null;
             calendar.setOptions({modal: val});
-        });
-
-        $('#show_wbn').change(function () {
-            var val = $(this).is(':checked') ? true : false;
-            calendar.setOptions({display_week_numbers: val});
-            calendar.view();
-        });
-        $('#show_wb').change(function () {
-            var val = $(this).is(':checked') ? true : false;
-            calendar.setOptions({weekbox: val});
-            calendar.view();
         });
     </script>
 {% endblock js %}
