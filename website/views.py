@@ -206,7 +206,7 @@ class AddEventView(View):
             event.owner = request.user.client
             event.save()
             event.businesses.set(request.POST.getlist('businesses'))
-            messages.success(request, 'Your even was successfully created!')
+						messages.success(request, 'Your event was successfully created!')
 
             return HttpResponseRedirect(reverse('website:events'))
 
@@ -366,7 +366,7 @@ class AddOpinionView(View):
         ).count()
 
         if events_count <= created_opinions_count:
-            messages.error(request, 'Cannot add more opinions on this business.')
+					messages.error(request, 'You cannot add more opinions on this business.')
             return HttpResponseRedirect(
                 reverse('website:business', kwargs={'pk': pk}))
 
